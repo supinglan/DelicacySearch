@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import router from '@/router';
+import axios from 'axios';
 export default {
     data: function () {
         return {
@@ -30,7 +32,15 @@ export default {
         }
     },
     methods: {
-        querySearch(queryString, cb) {
+      querySearch(queryString, cb) {
+      //   axios({
+      //   method: "post",
+      //     url: "http://localhost:8088/autofill",
+      //   data:this.toSearch
+      // })
+      //     .then(function (response) {
+      //       this.autoComp = response;
+      //     })
         var results = queryString ? this.autoComp.filter(this.createFilter(queryString)) : this.autoComp;
             // 调用 callback 返回建议列表的数据
         results.unshift({"value":this.toSearch}) // 把当前项加到列表
@@ -96,8 +106,8 @@ export default {
       handleSelect(item) {
         console.log(item);
         },
-        onNext() {
-            alert(this.toSearch);
+      onNext() {
+        router.push({ path: 'result/' + this.toSearch });
       }
     },
     mounted() {

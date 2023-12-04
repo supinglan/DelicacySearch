@@ -3,14 +3,35 @@
         <div style="width: 40%; min-width: 500px;margin: 50% auto; margin-top:25vh">
             <img src="../views/logo_full.png" style="width: 70%; ">
             <SearchZone style="margin-top: 2.5vh;" />
-            <div style="margin-top: 20px; padding-bottom: 40px; background-color: rgba(255,255,255,0.1); border-radius: 30px;">
+            <div style="margin-top: 20px; padding-bottom: 40px; background-color: rgba(255,255,255,0.3); border-radius: 30px;">
                 <div
                     style="font-weight: bold; color: #fff;  font-size: 25px; padding: 10px; margin-left: 20px;">
                     热门搜索</div>
                 <div style="">
                     <div style="display: inline-block; ">
                     <div v-for="item in hotKeyWords" key="id" style="display: flex;">
-                            <div v-show="item.id <= 4" style="color: white; margin-top: 5px; 
+                            <div v-show="item.id == 1" style="color: red; margin-top: 5px; 
+                                     font-size: large; margin-top: 15px;">
+                                <span style="font-weight: bold;">{{ item.id }}</span>
+                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                    {{ item.title }}
+                                </router-link>
+                            </div>
+                            <div v-show="item.id == 2" style="color: orangered; margin-top: 5px; 
+                                     font-size: large; margin-top: 15px;">
+                                <span style="font-weight: bold;">{{ item.id }}</span>
+                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                    {{ item.title }}
+                                </router-link>
+                            </div>
+                            <div v-show="item.id == 3" style="color: orange; margin-top: 5px; 
+                                     font-size: large; margin-top: 15px;">
+                                <span style="font-weight: bold;">{{ item.id }}</span>
+                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                    {{ item.title }}
+                                </router-link>
+                            </div>
+                            <div v-show="item.id == 4" style="color: white; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
                                 <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
@@ -57,7 +78,7 @@ export default {
     components: { SearchZone },
     methods: {
         GetHotKeywords() {
-
+            
         }
     }
 }

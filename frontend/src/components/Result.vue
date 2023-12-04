@@ -7,7 +7,7 @@
           <!-- logo -->
           <img src="../views/logo.png" alt="profile" style="width:40px;height: 40px; margin-top: 16px; margin-left: 6%;"/>
           <!-- 左侧搜索条 -->
-            <SearchZone style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
+            <SearchZone :toSearch="this.$route.params.para" style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
             <!-- 右侧设置及用户条 -->
           <ul class="info">
             <li>
@@ -183,6 +183,9 @@
   <script>
 import SearchZone from './SearchZone.vue';
 export default {
+    props(){
+      toSearch:''
+    },
     data () {
       return {
         para:'',
@@ -470,6 +473,9 @@ export default {
     jump(url){
       window.location.href = url;
     },
+    async Search(){
+      await axios.post('http://localhost:8088/elastic',this.)
+    }
   
     //   Search () {
     //     this.$axios
@@ -494,6 +500,9 @@ export default {
     //   }
     // }
   },
+  mounted(){
+    this.toSearch = this.$route.params.para
+  }
 }
   </script>
   

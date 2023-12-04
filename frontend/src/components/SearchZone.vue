@@ -24,24 +24,42 @@
 import router from '@/router';
 import axios from 'axios';
 export default {
-    data: function () {
+    props:{
+      
+        toSearch:''
+      
+    },
+    data() {
         return {
-            toSearch: '',
+
             temp: '1',
+         
+            
             autoComp : []
         }
     },
     methods: {
-      querySearch(queryString, cb) {
-      //   axios({
-      //   method: "post",
-      //     url: "http://localhost:8088/autofill",
-      //   data:this.toSearch
-      // })
-      // .then(function (response) {
-      //   this.autoComp = response;
-      // })
-        var results = queryString ? this.autoComp.filter(this.createFilter(queryString)) : this.autoComp;
+      async querySearch(queryString, cb) {
+     
+        const params = new URLSearchParams();  
+    params.append('SearchText',this.toSearch);
+      
+         await axios.post("http://localhost:8088/autofill",params)
+        .then(response=>{  
+          this.autoComp = []
+
+          response.data.forEach(element => {
+            this.autoComp.unshift({"value":element})
+          });
+
+      })  
+    
+      .catch(error => {  
+        console.error(error);  
+      });
+      // alert("this autoComp:" + this.autoComp[0].value)
+        // var results = queryString ? this.autoComp.filter(this.createFilter(queryString)) : this.autoComp;
+        var results = this.autoComp;
             // 调用 callback 返回建议列表的数据
 
           results.unshift({ "value": this.toSearch }) // 把当前项加到列表
@@ -53,6 +71,7 @@ export default {
         };
       },
       loadAll() {
+        
         return [
           { "value": "三全"},
           { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
@@ -108,7 +127,11 @@ export default {
         console.log(item);
         },
       onNext() {
+        if(!this.$route.fullPath.includes("result/"))
         router.push({ path: 'result/' + this.toSearch });
+        else
+          router.push({ path: this.toSearch });
+
       }
     },
     mounted() {

@@ -1,0 +1,143 @@
+[33mcommit 50474aa22d9cea4ccae8ffce68c060aca881306d[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: knayak <1564549374@qq.com>
+Date:   Mon Dec 4 20:18:18 2023 +0800
+
+    elastic modified1
+
+[33mcommit 9aaba743222ad030872925ce6bc9f029b8cb09f4[m
+Merge: 3797312 b178fec
+Author: knayak <1564549374@qq.com>
+Date:   Mon Dec 4 20:14:35 2023 +0800
+
+    elastic modified
+
+[33mcommit 3797312791aa29e18dcda93110ba29aae6b08fc3[m
+Author: knayak <1564549374@qq.com>
+Date:   Mon Dec 4 20:13:14 2023 +0800
+
+    elastic modified
+
+[33mcommit b178fec542c9274d9e5838b7281de81c4eb0c233[m
+Merge: f60bd33 f426f63
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Dec 4 19:53:27 2023 +0800
+
+    merge
+
+[33mcommit f60bd33dfe14ecdfc75f21404ee79ea8955c0f86[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Dec 4 19:47:04 2023 +0800
+
+    尝试merge
+
+[33mcommit f426f63421e70a3f59c83287f8dbfd0a1db81dd2[m
+Merge: e7d260e d61a219
+Author: knayak <1564549374@qq.com>
+Date:   Mon Dec 4 19:38:09 2023 +0800
+
+    modify gitignore
+
+[33mcommit e7d260efc54e761ae0948925ba7765e9c7b5d9f3[m
+Author: knayak <1564549374@qq.com>
+Date:   Mon Dec 4 19:34:43 2023 +0800
+
+    refactor: add service
+
+[33mcommit d61a2191b5535f2cb6a3db3b830bc327d02c6398[m
+Merge: 56e3b0c f29a68d
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Dec 4 19:32:59 2023 +0800
+
+    Merge branch 'main' of https://github.com/supinglan/DelicacySearch
+
+[33mcommit 56e3b0ca131778e1aec7f5e175fad1f075aa7c31[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Dec 4 19:26:46 2023 +0800
+
+    优化热搜颜色
+
+[33mcommit f29a68db9d6bd6cff6f7e2b76feda25935722b41[m
+Author: yanbing <1215362501@qq.com>
+Date:   Mon Dec 4 18:56:54 2023 +0800
+
+    update result page jump
+
+[33mcommit f1166e0950adf5df16091d75f082248efea5569f[m
+Merge: d7f50c6 2018a37
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Sun Dec 3 16:49:57 2023 +0800
+
+    Merge branch 'main' of https://github.com/supinglan/DelicacySearch
+
+[33mcommit d7f50c6cedfaaff13216c400e78a6e636bca5035[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Sun Dec 3 16:49:49 2023 +0800
+
+    初步完成Search页面，上传logo
+
+[33mcommit 2018a37e333fa3b1306b5de7af99baa83d26deb6[m
+Author: xx114514zju <107988105+xx114514zju@users.noreply.github.com>
+Date:   Fri Dec 1 22:00:44 2023 +0800
+
+    Add files via upload
+
+[33mcommit b8b20926fc541ccde1d5d8e5cc7c7df187208891[m
+Author: xx114514zju <107988105+xx114514zju@users.noreply.github.com>
+Date:   Fri Dec 1 21:56:42 2023 +0800
+
+    Delete backend directory
+
+[33mcommit dde726d7426cfb4b4e7cac08983b46526ac701df[m
+Author: yanbing <1215362501@qq.com>
+Date:   Fri Dec 1 21:15:40 2023 +0800
+
+    update result
+
+[33mcommit 09b30690943dab42252a58eca967888fe4b91589[m
+Merge: de48380 7baf068
+Author: yanbing <1215362501@qq.com>
+Date:   Fri Dec 1 21:12:42 2023 +0800
+
+    Merge branch 'main' of https://github.com/supinglan/DelicacySearch
+
+[33mcommit de48380313d113d0f14b32bdc17be5a05139d3e1[m
+Author: yanbing <1215362501@qq.com>
+Date:   Fri Dec 1 21:07:51 2023 +0800
+
+    update result
+
+[33mcommit 7baf068004ba4e2a2486274886ca24e9ddcb8b8b[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Thu Nov 30 23:51:14 2023 +0800
+
+    初步实现了Search页面；实现了SearchZone组件，可供其他页面调用
+
+[33mcommit dbb8cad6deef0cb8661923143d628b35f6652909[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Nov 27 20:57:01 2023 +0800
+
+    重建前端，引入element ui，形成基本框架
+
+[33mcommit 8ac8a7508c6b8b28e78579f5dd3e29709af85be9[m
+Author: abilitywuchen <abilitywuchen@qq.com>
+Date:   Mon Nov 27 14:33:48 2023 +0800
+
+    前端重命名为frontend
+
+[33mcommit d3f465eedbd3973396d43c4aae32eb3a40526718[m
+Author: yanbing <1215362501@qq.com>
+Date:   Wed Nov 15 21:47:17 2023 +0800
+
+    init fronted
+
+[33mcommit ff3de5612f0381002e29d40f033157153ed0d7ae[m
+Author: supinglan <s2530555829@outlook.com>
+Date:   Wed Nov 15 19:19:14 2023 +0800
+
+    init backend
+
+[33mcommit c94fbc4091a91ac02e1bf2fcc5050e3004ce561f[m
+Author: supinglan <s2530555829@outlook.com>
+Date:   Wed Nov 15 19:01:03 2023 +0800
+
+    init

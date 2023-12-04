@@ -21,12 +21,7 @@ const routes = [
     path: '/detail',
     name: 'detail',
     component: Detail
-  },
-  {
-    path: '/result/:para',
-    name: 'result',
-    component: Result
-  },
+  }
   
 ]
 

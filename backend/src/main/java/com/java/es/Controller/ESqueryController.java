@@ -39,15 +39,26 @@ public class ESqueryController {
     @RequestMapping(value = "/autofill", method = RequestMethod.POST)
     public ArrayList<String> autofills(String SearchText)
     {
-        return squeryService.AutoFill(SearchText);
+        ArrayList<String> result = new ArrayList<>();
+        if(!Pattern.matches(".*[a-zA-Z].*", SearchText))
+        {
+            result.addAll(squeryService.AutoFill(SearchText));
+            if (result.size() > 9) {
+                result = new ArrayList<>(result.subList(0, 9));
+            }
+        }
+        else
+        {
+            result.addAll(squeryService.pinyin_all(SearchText));
+            if (result.size() > 9) {
+                result = new ArrayList<>(result.subList(0, 9));
+            }
+        }
+        return result;
     }
 
 
-    @RequestMapping(value = "/pinyin", method = RequestMethod.POST)
-    public ArrayList<String> getnames(String SearchText)
-    {
-        return squeryService.getNames(SearchText);
-    }
+
 
 }
 

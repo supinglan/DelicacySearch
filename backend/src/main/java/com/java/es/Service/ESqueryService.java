@@ -1,6 +1,7 @@
 package com.java.es.Service;
 
 import com.java.es.pojo.Script;
+import com.sun.org.apache.bcel.internal.generic.ARETURN;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 
@@ -40,8 +42,8 @@ public class ESqueryService {
                     }
                 }
             }
-            if (total_results.size() > 9) {
-                total_results = new ArrayList<>(total_results.subList(0, 9));
+            if (total_results.size() > 200) {
+                total_results = new ArrayList<>(total_results.subList(0, 200));
             }
             return total_results;
         }
@@ -129,10 +131,9 @@ public class ESqueryService {
             if(hitnum == 0) System.out.println("无结果！");
             for (SearchHit hit : hits) {
                 // 处理每个命中的文档
-
                 String title = hit.getSourceAsMap().get("title").toString();
-
-                if (!result.contains(title)) {
+                //返回的title将不含自己本身
+                if (!result.contains(title) && !Objects.equals(title, SearchText)) {
                     result.add(title);
                 }
             }
@@ -166,4 +167,19 @@ public class ESqueryService {
         }
         return result;
     }
+
+    public ArrayList<String> pinyin_all(String SearchText)
+    {
+        ArrayList<String> search_res = getNames(SearchText);
+        ArrayList<String> total_res = new ArrayList<>();
+        total_res.addAll(search_res);
+        for (String searchRe : search_res) {
+            ArrayList<String> corr_res = AutoFill(searchRe);
+            for (int j = 0; j < corr_res.size(); j++) {
+                if (!total_res.contains(corr_res.get(j))) total_res.add(corr_res.get(j));
+            }
+        }
+        return total_res;
+    }
+
 }

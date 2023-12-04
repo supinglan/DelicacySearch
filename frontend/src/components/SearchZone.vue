@@ -25,7 +25,8 @@ import router from '@/router';
 import axios from 'axios';
 export default {
     props:{
-      
+        toDo:{type:Function, required: true},
+        prevRoute:'',
         toSearch:''
       
     },
@@ -33,7 +34,7 @@ export default {
         return {
 
             temp: '1',
-         
+            
             
             autoComp : []
         }
@@ -49,7 +50,7 @@ export default {
           this.autoComp = []
 
           response.data.forEach(element => {
-            this.autoComp.unshift({"value":element})
+            this.autoComp.push({"value":element})
           });
 
       })  
@@ -127,11 +128,25 @@ export default {
         console.log(item);
         },
       onNext() {
-        if(!this.$route.fullPath.includes("result/"))
-        router.push({ path: 'result/' + this.toSearch });
-        else
-          router.push({ path: this.toSearch });
+        if(this.toSearch===''){
+          router.go(-1)
+          return;
+        }
+        if(this.toSearch===this.prevRoute){
+          return;
+        }
 
+        if(this.toSearch!==this.prevRoute){
+          
+          this.prevRoute = this.toSearch
+          if(!this.$route.fullPath.includes("result/"))
+          router.push({ path: 'result/' + this.toSearch }).catch();
+          else
+          router.replace({ path: this.toSearch }).catch();
+
+          toDo();
+
+        }
       }
     },
     mounted() {

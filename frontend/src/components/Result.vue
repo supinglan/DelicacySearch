@@ -7,7 +7,7 @@
           <!-- logo -->
           <img src="../views/logo.png" alt="profile" style="width:40px;height: 40px; margin-top: 16px; margin-left: 6%;"/>
           <!-- 左侧搜索条 -->
-            <SearchZone :toSearch="this.$route.params.para" style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
+            <SearchZone @keyup.enter.native="onNext" :prevRoute="this.$route.params.para" :toSearch="this.$route.params.para" style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
             <!-- 右侧设置及用户条 -->
           <ul class="info">
             <li>
@@ -182,10 +182,8 @@
   
   <script>
 import SearchZone from './SearchZone.vue';
+import axios from 'axios';
 export default {
-    props(){
-      toSearch:''
-    },
     data () {
       return {
         para:'',
@@ -474,7 +472,38 @@ export default {
       window.location.href = url;
     },
     async Search(){
-      await axios.post('http://localhost:8088/elastic',this.)
+      const params = new URLSearchParams();  
+    params.append('SearchText',this.$route.params.para);
+      await axios.post('http://localhost:8088/elastic',params)
+      .then(response=>{
+         this.searchResults=[]
+         let i = 1
+        response.data.forEach(element => {
+          if(i>8) return;
+          if (element.abstract.length>140)
+          element.abstract = element.abstract.substring(0,140)+"..."
+          if(element.origin!=="食谱秀"){
+            this.searchResults.push({
+              "id": i,
+              "title":element.title,
+              "abstracts":element.abstract,
+              "imgURL":element.pict_url,
+              "url":element.html_url
+            })
+            i++
+
+          }
+        });
+        // let list = response.data
+        // this.searchResults = list
+        
+      })
+      .catch(error => {  
+        console.error(error);  
+      });
+    },
+    onNext(){
+      this.Search();
     }
   
     //   Search () {
@@ -500,8 +529,9 @@ export default {
     //   }
     // }
   },
-  mounted(){
-    this.toSearch = this.$route.params.para
+  created(){
+    this.Search()
+
   }
 }
   </script>

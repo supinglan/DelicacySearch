@@ -28,6 +28,7 @@ import java.util.ArrayList;
 @Component
 public class IndexBuilder {
     public static void main(String[] Args) throws IOException {
+
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("localhost", 9200, "http")));
@@ -41,60 +42,63 @@ public class IndexBuilder {
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             System.out.println("索引已存在并已删除：" + "script_index");
         } else {
-            System.out.println("索引不存在：" + "script_index");
+            System.out.println("索引不存在：" +
+
+
+                    "script_index");
         }
         CreateIndexRequest request = new CreateIndexRequest("script_index");
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);
-        for (int t = 0; t <= 2000; t++) {
-            try {
-                String url = "https://www.shipuxiu.com/caipu/" + t + "/";
-                Document document = Jsoup.parse(new URL(url), 30000);
-                Elements elements = document.getElementsByClass("recipe-show");
-                Element title;
-                if (!elements.isEmpty()) {
-                    title = elements.get(0);
-                } else {
-                    // 处理找不到元素的情况
-                    System.out.println("页面" + t + "不存在");
-                    continue;
-                }
-                Element paragraphs = title.getElementsByTag("p").get(0);
-                String text_title = paragraphs.text();
-                String source = "食谱秀";
-                String html_url = url;
-                String pict_url = document.getElementsByClass("showLeft left").get(0).select("img").attr("src");
-                String Abstract = abstract_converter(document.getElementsByClass("desc description").get(0).text());
-                if (Abstract.isEmpty()) continue;
-                Elements liElements = document.select("div.material > ul > li.ingtbur");
-                ArrayList<String> ingredient = new ArrayList<>();
-                for (Element li : liElements) {
-                    if (!li.text().isEmpty()) {
-                        ingredient.add(li.text());
-                    }
-                }
-                ArrayList<String> steps = new ArrayList<>();
-                Elements elements1 = document.select("p.sstep");
-                for (Element element : elements1) {
-                    steps.add(element.text());
-                }
-                //放入索引
-                Script script = new Script(pict_url, html_url, text_title, Abstract, ingredient, steps, source);
-                IndexRequest request1 = new IndexRequest("script_index");
-                request1.id(Integer.toString(t));
-                request1.timeout(TimeValue.timeValueSeconds(1));
-                request1.timeout("1s");
-                request1.source(JSON.toJSONString(script), XContentType.JSON);
-                IndexResponse indexResponse = restHighLevelClient.index(request1, RequestOptions.DEFAULT);
-
-                System.out.println(indexResponse.toString());
-            }
-            catch (Exception e)
-            {
-                System.out.println("HTTP状态异常：");
-            }
-        }
-        for (int t = 12; t <= 5000; t++) {
+//        for (int t = 0; t <= 2000; t++) {
+//            try {
+//                String url = "https://www.shipuxiu.com/caipu/" + t + "/";
+//                Document document = Jsoup.parse(new URL(url), 30000);
+//                Elements elements = document.getElementsByClass("recipe-show");
+//                Element title;
+//                if (!elements.isEmpty()) {
+//                    title = elements.get(0);
+//                } else {
+//                    // 处理找不到元素的情况
+//                    System.out.println("页面" + t + "不存在");
+//                    continue;
+//                }
+//                Element paragraphs = title.getElementsByTag("p").get(0);
+//                String text_title = paragraphs.text();
+//                String source = "食谱秀";
+//                String html_url = url;
+//                String pict_url = document.getElementsByClass("showLeft left").get(0).select("img").attr("src");
+//                String Abstract = abstract_converter(document.getElementsByClass("desc description").get(0).text());
+//                if (Abstract.isEmpty()) continue;
+//                Elements liElements = document.select("div.material > ul > li.ingtbur");
+//                ArrayList<String> ingredient = new ArrayList<>();
+//                for (Element li : liElements) {
+//                    if (!li.text().isEmpty()) {
+//                        ingredient.add(li.text());
+//                    }
+//                }
+//                ArrayList<String> steps = new ArrayList<>();
+//                Elements elements1 = document.select("p.sstep");
+//                for (Element element : elements1) {
+//                    steps.add(element.text());
+//                }
+//                //放入索引
+//                Script script = new Script(pict_url, html_url, text_title, Abstract, ingredient, steps, source);
+//                IndexRequest request1 = new IndexRequest("script_index");
+//                request1.id(Integer.toString(t));
+//                request1.timeout(TimeValue.timeValueSeconds(1));
+//                request1.timeout("1s");
+//                request1.source(JSON.toJSONString(script), XContentType.JSON);
+//                IndexResponse indexResponse = restHighLevelClient.index(request1, RequestOptions.DEFAULT);
+//
+//                System.out.println(indexResponse.toString());
+//            }
+//            catch (HttpStatusException e)
+//            {
+//                System.out.println("HTTP状态异常：");
+//            }
+//        }
+        for (int t = 12; t <= 70000; t++) {
             String url = "https://home.meishichina.com/recipe-" + t + ".html";
             try {
                 Document document = Jsoup.parse(new URL(url), 30000);

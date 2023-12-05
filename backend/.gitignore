@@ -1,2 +1,29 @@
-.idea/*
-.target/*
+# Maven
+target/
+mvnw
+mvnw.cmd
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Gradle
+build/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE-specific
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Logs
+logs/
+
+# OS-specific
+.DS_Store
+Thumbs.db

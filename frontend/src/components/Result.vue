@@ -107,7 +107,7 @@
             <el-image :src="url2"></el-image>
             <a  href="javascript:;">柑橘</a>
           </li> 
-          <li class="item">setting
+          <li class="item">
             <el-image :src="url3"></el-image>
             <a  href="javascript:;">柠檬</a>
           </li> 

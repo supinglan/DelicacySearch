@@ -31,7 +31,7 @@ public class IndexBuilder {
 
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")));
+                        new HttpHost("120.55.14.3", 9200, "http")));
 
         GetIndexRequest getIndexRequest = new GetIndexRequest("script_index");
         boolean indexExists = restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);

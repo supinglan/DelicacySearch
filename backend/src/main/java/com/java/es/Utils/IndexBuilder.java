@@ -33,7 +33,7 @@ public class IndexBuilder {
     public static void main(String[] Args) throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")));
+                        new HttpHost("120.55.14.3", 9200, "http")));
 
         GetIndexRequest getIndexRequest = new GetIndexRequest("script_index");
         boolean indexExists = restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);
@@ -44,12 +44,14 @@ public class IndexBuilder {
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             System.out.println("索引已存在并已删除：" + "script_index");
         } else {
-            System.out.println("索引不存在：" + "script_index");
+            System.out.println("索引不存在：" +
+
+
+                    "script_index");
         }
         CreateIndexRequest request = new CreateIndexRequest("script_index");
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);
-
 
 
         GetIndexRequest getIndexRequest2 = new GetIndexRequest("pigg_test_pinyin");

@@ -1,5 +1,5 @@
 # Maven
-target/
+target/*
 mvnw
 mvnw.cmd
 *.jar

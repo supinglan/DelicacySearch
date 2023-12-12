@@ -3,6 +3,9 @@
         <div style="width: 40%; min-width: 500px;margin: 50% auto; margin-top:25vh">
             <img src="../views/logo_full.png" style="width: 70%; ">
             <SearchZone style="margin-top: 2.5vh;" />
+
+            <AIQA style="height: 30vh;"/>
+
             <div style="margin-top: 20px; padding-bottom: 40px; background-color: rgba(255,255,255,0.3); border-radius: 30px;">
                 <div
                     style="font-weight: bold; color: #fff;  font-size: 25px; padding: 10px; margin-left: 20px;">
@@ -59,6 +62,7 @@
 
 <script>
 import SearchZone from './SearchZone.vue';
+import AIQA from './AIQA.vue';
 import axios from 'axios';
 export default {
     data: function () {
@@ -75,7 +79,7 @@ export default {
             ]
         }
     },
-    components: { SearchZone },
+    components: { SearchZone,AIQA },
     methods: {
         GetHotKeywords() {
             

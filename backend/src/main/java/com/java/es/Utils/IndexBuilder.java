@@ -44,10 +44,7 @@ public class IndexBuilder {
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             System.out.println("索引已存在并已删除：" + "script_index");
         } else {
-            System.out.println("索引不存在：" +
-
-
-                    "script_index");
+            System.out.println("索引不存在：" + "script_index");
         }
         CreateIndexRequest request = new CreateIndexRequest("script_index");
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);

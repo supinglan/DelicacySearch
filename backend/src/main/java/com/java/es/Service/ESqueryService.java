@@ -52,7 +52,7 @@ public class ESqueryService {
             try {
                 SearchRequest searchRequest = new SearchRequest("script_index");
                 MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                        .field("title", 5.0F)  // 设置"title"字段的权重为5.0
+                        .field("title", 10.0F)  // 设置"title"字段的权重为5.0
                         .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
                         .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
                         .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
@@ -121,6 +121,8 @@ public class ESqueryService {
         }
     }
 
+
+
     //汉字的自动补全功能，返回所有包含输入的标题
     public ArrayList<String> AutoFill(String SearchText)
     {
@@ -128,7 +130,7 @@ public class ESqueryService {
         try {
             SearchRequest searchRequest = new SearchRequest("script_index");
             MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                    .field("title", 3.14F)  // 设置"title"字段的权重为3.0
+                    .field("title", 10.0F)  // 设置"title"字段的权重为3.0
                     .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
                     .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
                     .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
@@ -306,6 +308,9 @@ public class ESqueryService {
             for (String subString : subStrings) {
                searchResults.addAll(executeSearchQuery(subString));
             }
+            Comparator<Script> scoreComparator = Comparator.comparing(Script::getScore).reversed();
+            // 使用 Collections.sort 方法并传入比较器来对 searchResults 进行排序
+            Collections.sort(searchResults, scoreComparator);
         }
         else if(SearchText.contains("-"))
         {

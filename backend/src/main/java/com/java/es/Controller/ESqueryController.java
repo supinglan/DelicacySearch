@@ -38,10 +38,10 @@ public class ESqueryController {
     private StepsSearchService stepsSearchService;
 
 
-    @RequestMapping(value = "/elastic", method = RequestMethod.POST)
-    public ArrayList<Script> search_all(String SearchText) throws IOException {
-       return squeryService.executeSearchQuery(SearchText);
-    }
+//    @RequestMapping(value = "/elastic", method = RequestMethod.POST)
+//    public ArrayList<Script> search_all(String SearchText) throws IOException {
+//       return squeryService.executeSearchQuery(SearchText);
+//    }
 
     @RequestMapping(value = "/autofill", method = RequestMethod.POST)
     public ArrayList<String> AutoFill(String SearchText)
@@ -76,13 +76,13 @@ public class ESqueryController {
     }
 
     //筛选标签
-    @RequestMapping(value = "/selectByTag", method = RequestMethod.POST)
-    public ArrayList<Script> selectByTag(String SearchText, Integer a1, Integer a2, Integer a3, Integer a4) throws IOException {
+    @RequestMapping(value = "/elastic", method = RequestMethod.POST)
+    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category) throws IOException {
         ArrayList<Integer> ints = new ArrayList<>();
-        ints.add(a1);
-        ints.add(a2);
-        ints.add(a3);
-        ints.add(a4);
+        ints.add(Method);
+        ints.add(Taste);
+        ints.add(Scene);
+        ints.add(Category);
         return squeryService.searchByTags(SearchText, ints);
     }
 

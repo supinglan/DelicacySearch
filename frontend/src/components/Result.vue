@@ -115,7 +115,6 @@
             <li><span style="color:gold">3</span><a href="javascript:;">汤</a></li> 
             <li><span>4</span><a href="javascript:;">排骨</a></li> 
             <li><span>5</span><a href="javascript:;">白菜</a></li> 
-            <li><span>Method:{{Method}}</span></li>
           </div>
           <div style="margin-left: 25%;">
             <li><span>6</span><a href="javascript:;">鸡蛋</a></li> 
@@ -314,63 +313,87 @@ export default {
       this.Search();
     },
     updateSelect(data){
-    console.log(data);
     let tag = data.tag;
     let key = data.key;
+    console.log(tag);
+    console.log(key);
     if(key === 0){
       switch(tag){
         case "Null":
           this.Method = 0;
+          break;
         case "煎":
           this.Method = 1;
+          break;
         case "蒸":
           this.Method = 2;
+          break;
         case "炖":
           this.Method = 3;
+          break;
         case "烧":
           this.Method = 4;
+          break;
         case "炸":
           this.Method = 5;
+          break;
         case "卤":
           this.Method = 6;
+          break;
         case "干锅":
           this.Method = 7;
+          break;
         case "火锅":
           this.Method = 8;
+          break;
       }
     }else if(key === 1){
       switch(tag){
         case "Null":
           this.Taste = 0;
+          break;
         case "辣":
           this.Taste = 1;
+          break;
         case "咖喱":
           this.Taste = 2;
+          break;
         case "蒜香":
           this.Taste = 3;
+          break;
         case "酸甜":
           this.Taste = 4;
+          break;
         case "奶香":
           this.Taste = 5;
+          break;
         case "孜然":
           this.Taste = 6;
+          break;
         case "鱼香":
           this.Taste = 7;
+          break;
         case "五香":
           this.Taste = 8;
+          break;
         case "清淡":
           this.Taste = 9
+          break;
       }
     }else if(key === 2){
       switch(tag){
         case "Null":
           this.Scene = 0;
+          break;
         case "早餐":
           this.Scene = 1;
+          break;
         case "下午茶":
           this.Scene = 2;
+          break;
         case "二人世界":
           this.Scene = 3;
+          break;
         case "正餐":
           this.Scene = 4;
       }
@@ -378,20 +401,28 @@ export default {
       switch(tag){
         case "Null":
           this.Category = 0;
+          break;
         case "烘焙":
           this.Category = 1;
+          break;
         case "汤羹":
           this.Category = 2;
+          break;
         case "主食":
           this.Category = 3;
+          break;
         case "小吃":
           this.Category = 4;
+          break;
         case "荤菜":
           this.Category = 5;
+          break;
         case "素菜":
           this.Category = 6;
+          break;
         case "凉菜":
           this.Category = 7;
+          break;
       }
     }
   }

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class ESqueryService {
+public class IngredientSearchService {
     @Autowired
     public RestHighLevelClient elasticsearchClient;
 
@@ -43,6 +43,7 @@ public class ESqueryService {
                     }
                 }
             }
+            //对于返回的搜索结果，只保留前500条
             return total_results;
         }
         //汉字搜索
@@ -52,11 +53,7 @@ public class ESqueryService {
             try {
                 SearchRequest searchRequest = new SearchRequest("script_index");
                 MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                        .field("title", 5.0F)  // 设置"title"字段的权重为5.0
-                        .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
-                        .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
-                        .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
-                        .field("origin", 0.5F);
+                        .field("ingredient", 1.5F);  // 设置"ingredient"字段的权重为1.5;
                 searchRequest.source().query(queryBuilder);
                 searchRequest.source().fetchSource(true);
                 searchRequest.source().sort("_score", SortOrder.DESC);
@@ -128,15 +125,11 @@ public class ESqueryService {
         try {
             SearchRequest searchRequest = new SearchRequest("script_index");
             MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                    .field("title", 3.14F)  // 设置"title"字段的权重为3.0
-                    .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
-                    .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
-                    .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
-                    .field("origin", 0.5F);
+                    .field("ingredient", 1.5F) ; // 设置"ingredient"字段的权重为1.5
             searchRequest.source().query(queryBuilder);
             searchRequest.source().fetchSource(true);
             searchRequest.source().sort("_score", SortOrder.DESC);
-            searchRequest.source().size(200);
+            searchRequest.source().size(500);
             SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
             SearchHits hits = searchResponse.getHits();
             long hitnum = hits.getTotalHits().value;
@@ -193,79 +186,6 @@ public class ESqueryService {
     }
 
     //按照标签搜索
-    public ArrayList<Script> searchByTags(String SearchText, ArrayList<Integer> searchOps) throws IOException {
-        ArrayList<Script> results = executeSearchQuery(SearchText);
-        ArrayList<String> tags = new ArrayList<>();
-        //烹调方式
-        switch(searchOps.get(0))
-        {
-            case 1: tags.add("煎"); break;
-            case 2: tags.add("蒸"); break;
-            case 3: tags.add("炖"); break;
-            case 4: tags.add("烧"); break;
-            case 5: tags.add("炸"); break;
-            case 6: tags.add("卤"); break;
-            case 7: tags.add("干锅"); break;
-            case 8: tags.add("火锅"); break;
-            case 0:
-            default: break;
-        }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
-        switch(searchOps.get(1))
-        {
-            case 1: tags.add("辣"); break;
-            case 2: tags.add("咖喱"); break;
-            case 3: tags.add("蒜香"); break;
-            case 4: tags.add("酸甜"); break;
-            case 5: tags.add("奶香"); break;
-            case 6: tags.add("孜然"); break;
-            case 7: tags.add("鱼香"); break;
-            case 8: tags.add("五香"); break;
-            case 9: tags.add("清淡"); break;
-            case 0:
-            default: break;
-        }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
-        switch(searchOps.get(2))
-        {
-            case 1: tags.add( "早餐"); break;
-            case 2: tags.add( "下午茶"); break;
-            case 3: tags.add( "二人世界"); break;
-            case 4: tags.add( "正餐"); break;
-            case 0:
-            default: break;
-        }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
-        switch(searchOps.get(3))
-        {
-            case 1: tags.add("烘焙"); break;
-            case 2: tags.add("汤羹"); break;
-            case 3: tags.add("主食"); break;
-            case 4: tags.add("小吃"); break;
-            case 5: tags.add("荤菜"); break;
-            case 6: tags.add("素菜"); break;
-            case 7: tags.add("凉菜"); break;
-            case 0:
-            default: break;
-        }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        return results;
-    }
 
     //综合排序（相关度60% + 点击量40%）
     public ArrayList<Script> searchByAll(String SearchText) throws IOException {
@@ -304,7 +224,7 @@ public class ESqueryService {
             String[] subStrings;
             subStrings = SearchText.split("(?i)\\bor\\b");
             for (String subString : subStrings) {
-               searchResults.addAll(executeSearchQuery(subString));
+                searchResults.addAll(executeSearchQuery(subString));
             }
         }
         else if(SearchText.contains("-"))
@@ -349,16 +269,13 @@ public class ESqueryService {
             for (String str : resultList) {
                 boolQuery.must(
                         QueryBuilders.boolQuery()
-                                .should(QueryBuilders.matchPhraseQuery("title", str))
-                                .should(QueryBuilders.matchPhraseQuery("abstract", str))
                                 .should(QueryBuilders.matchPhraseQuery("ingredient", str))
-                                .should(QueryBuilders.matchPhraseQuery("steps", str))
-                                .should(QueryBuilders.matchPhraseQuery("origin", str))
                 );
             }
             searchRequest.source().query(boolQuery);
             searchRequest.source().fetchSource(true);
             searchRequest.source().sort("_score", SortOrder.DESC);
+            searchRequest.source().size(500);
             SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
             SearchHits hits = searchResponse.getHits();
             long hitnum = hits.getTotalHits().value;

@@ -115,6 +115,7 @@
             <li><span style="color:gold">3</span><a href="javascript:;">汤</a></li> 
             <li><span>4</span><a href="javascript:;">排骨</a></li> 
             <li><span>5</span><a href="javascript:;">白菜</a></li> 
+            <li><span>Method:{{Method}}</span></li>
           </div>
           <div style="margin-left: 25%;">
             <li><span>6</span><a href="javascript:;">鸡蛋</a></li> 
@@ -346,6 +347,7 @@ export default {
         case "火锅":
           this.Method = 8;
           break;
+
       }
     }else if(key === 1){
       switch(tag){

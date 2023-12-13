@@ -23,7 +23,7 @@
             <li>
               <a href="javascript:;">
                 <img src="../assets/setting.png" alt="profile" />
-                <span class="user">setting</span>
+                <span class="user">Setting</span>
               </a>
             </li>
             <li>
@@ -32,20 +32,11 @@
                 <span class="user">Guest</span>
               </a>
             </li>
-            
           </ul>
           <!-- 下部导航条 -->
           <ul class="service">
-            
-        <!-- 筛选>
-      <el-cascader :options="options">
-        <template slot-scope="{ node, data }">
-          <span>{{ data.label }}</span>
-          <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-        </template>
-      </el-cascader> -->
           </ul>
-        </div>
+        </div>       
       </div>
   
       <div class="line"></div>
@@ -57,7 +48,11 @@
         </div>
         <!-- 搜索结果 -->
         <ul class="results">
- 
+          <el-collapse v-model="activeNames">
+          <el-collapse-item title="自定义筛选" name="1">
+            <Selection :updateSelect="this.updateSelect"></Selection>
+          </el-collapse-item>
+        </el-collapse>
           <li
             class="result-content"
             v-for="searchResult in searchResults"
@@ -120,6 +115,7 @@
             <li><span style="color:gold">3</span><a href="javascript:;">汤</a></li> 
             <li><span>4</span><a href="javascript:;">排骨</a></li> 
             <li><span>5</span><a href="javascript:;">白菜</a></li> 
+            <li><span>Method:{{Method}}</span></li>
           </div>
           <div style="margin-left: 25%;">
             <li><span>6</span><a href="javascript:;">鸡蛋</a></li> 
@@ -128,6 +124,7 @@
             <li><span>9</span><a href="javascript:;">豆腐</a></li> 
             <li><span>10</span><a href="javascript:;">面食</a></li> 
           </div>
+          
         </div>
         </ul>
 
@@ -182,220 +179,27 @@
   
   <script>
 import SearchZone from './SearchZone.vue';
+import Selection from './Selection.vue';
 import axios from 'axios';
 export default {
     data () {
       return {
-        para:'',
+        activeNames: [],
+        Method:0,
+        Taste:0,
+        Scene:0,
+        Category:0,
         option: [{
           value: '选项1',
-          label: '默认排序'
+          label: '综合排序'
         }, {
           value: '选项2',
-          label: '按时间'
+          label: '相关度排序'
         }, {
           value: '选项3',
-          label: '按相关度'
-        }, {
-          value: '选项4',
-          label: '按搜索量'
+          label: '点击量排序'
         }],
         value: '',
-        options: [{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, {
-          value: 'zujian',
-          label: '组件',
-          children: [{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-          }, {
-            value: 'form',
-            label: 'Form',
-            children: [{
-              value: 'radio',
-              label: 'Radio 单选框'
-            }, {
-              value: 'checkbox',
-              label: 'Checkbox 多选框'
-            }, {
-              value: 'input',
-              label: 'Input 输入框'
-            }, {
-              value: 'input-number',
-              label: 'InputNumber 计数器'
-            }, {
-              value: 'select',
-              label: 'Select 选择器'
-            }, {
-              value: 'cascader',
-              label: 'Cascader 级联选择器'
-            }, {
-              value: 'switch',
-              label: 'Switch 开关'
-            }, {
-              value: 'slider',
-              label: 'Slider 滑块'
-            }, {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器'
-            }, {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器'
-            }, {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器'
-            }, {
-              value: 'upload',
-              label: 'Upload 上传'
-            }, {
-              value: 'rate',
-              label: 'Rate 评分'
-            }, {
-              value: 'form',
-              label: 'Form 表单'
-            }]
-          }, {
-            value: 'data',
-            label: 'Data',
-            children: [{
-              value: 'table',
-              label: 'Table 表格'
-            }, {
-              value: 'tag',
-              label: 'Tag 标签'
-            }, {
-              value: 'progress',
-              label: 'Progress 进度条'
-            }, {
-              value: 'tree',
-              label: 'Tree 树形控件'
-            }, {
-              value: 'pagination',
-              label: 'Pagination 分页'
-            }, {
-              value: 'badge',
-              label: 'Badge 标记'
-            }]
-          }, {
-            value: 'notice',
-            label: 'Notice',
-            children: [{
-              value: 'alert',
-              label: 'Alert 警告'
-            }, {
-              value: 'loading',
-              label: 'Loading 加载'
-            }, {
-              value: 'message',
-              label: 'Message 消息提示'
-            }, {
-              value: 'message-box',
-              label: 'MessageBox 弹框'
-            }, {
-              value: 'notification',
-              label: 'Notification 通知'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'menu',
-              label: 'NavMenu 导航菜单'
-            }, {
-              value: 'tabs',
-              label: 'Tabs 标签页'
-            }, {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑'
-            }, {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单'
-            }, {
-              value: 'steps',
-              label: 'Steps 步骤条'
-            }]
-          }, {
-            value: 'others',
-            label: 'Others',
-            children: [{
-              value: 'dialog',
-              label: 'Dialog 对话框'
-            }, {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示'
-            }, {
-              value: 'popover',
-              label: 'Popover 弹出框'
-            }, {
-              value: 'card',
-              label: 'Card 卡片'
-            }, {
-              value: 'carousel',
-              label: 'Carousel 走马灯'
-            }, {
-              value: 'collapse',
-              label: 'Collapse 折叠面板'
-            }]
-          }]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [{
-            value: 'axure',
-            label: 'Axure Components'
-          }, {
-            value: 'sketch',
-            label: 'Sketch Templates'
-          }, {
-            value: 'jiaohu',
-            label: '组件交互文档'
-          }]
-        }],
       url1:"https://tse3-mm.cn.bing.net/th/id/OIP-C.EEFoDCyN0wjAgxArXWiAyAHaFC?w=276&h=188&c=7&r=0&o=5&dpr=1.3&pid=1.7",
       url2:"https://tse1-mm.cn.bing.net/th/id/OIP-C.MV5TPVtOw2H_XqNwCZ1jdgHaE8?w=259&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
       url3:"https://tse3-mm.cn.bing.net/th/id/OIP-C.EOkhk7RzVXnR22_Zn8WtJwHaE8?w=252&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
@@ -462,7 +266,7 @@ export default {
       ]
       }
     },
-    components: { SearchZone },
+    components: { SearchZone,Selection },
   
     methods: {
     onConfirm() {
@@ -474,6 +278,10 @@ export default {
     async Search(){
       const params = new URLSearchParams();  
     params.append('SearchText',this.$route.params.para);
+    params.append('Method',this.Method);
+    params.append('Taste',this.Taste);
+    params.append('Scene',this.Scene);
+    params.append('Category',this.Category);
       await axios.post('http://localhost:8088/elastic',params)
       .then(response=>{
          this.searchResults=[]
@@ -481,7 +289,7 @@ export default {
         response.data.forEach(element => {
           if(i>8) return;
           if (element.abstract.length>140)
-          element.abstract = element.abstract.substring(0,140)+"..."
+          element.abstract = element.abstract.substring(0,135)+"..."
           if(element.origin!=="食谱秀"){
             this.searchResults.push({
               "id": i,
@@ -504,35 +312,94 @@ export default {
     },
     onNext(){
       this.Search();
+    },
+    updateSelect(data){
+    console.log(data);
+    let tag = data.tag;
+    let key = data.key;
+    if(key === 0){
+      switch(tag){
+        case "Null":
+          this.Method = 0;
+        case "煎":
+          this.Method = 1;
+        case "蒸":
+          this.Method = 2;
+        case "炖":
+          this.Method = 3;
+        case "烧":
+          this.Method = 4;
+        case "炸":
+          this.Method = 5;
+        case "卤":
+          this.Method = 6;
+        case "干锅":
+          this.Method = 7;
+        case "火锅":
+          this.Method = 8;
+      }
+    }else if(key === 1){
+      switch(tag){
+        case "Null":
+          this.Taste = 0;
+        case "辣":
+          this.Taste = 1;
+        case "咖喱":
+          this.Taste = 2;
+        case "蒜香":
+          this.Taste = 3;
+        case "酸甜":
+          this.Taste = 4;
+        case "奶香":
+          this.Taste = 5;
+        case "孜然":
+          this.Taste = 6;
+        case "鱼香":
+          this.Taste = 7;
+        case "五香":
+          this.Taste = 8;
+        case "清淡":
+          this.Taste = 9
+      }
+    }else if(key === 2){
+      switch(tag){
+        case "Null":
+          this.Scene = 0;
+        case "早餐":
+          this.Scene = 1;
+        case "下午茶":
+          this.Scene = 2;
+        case "二人世界":
+          this.Scene = 3;
+        case "正餐":
+          this.Scene = 4;
+      }
+    }else if(key === 3){
+      switch(tag){
+        case "Null":
+          this.Category = 0;
+        case "烘焙":
+          this.Category = 1;
+        case "汤羹":
+          this.Category = 2;
+        case "主食":
+          this.Category = 3;
+        case "小吃":
+          this.Category = 4;
+        case "荤菜":
+          this.Category = 5;
+        case "素菜":
+          this.Category = 6;
+        case "凉菜":
+          this.Category = 7;
+      }
     }
-  
-    //   Search () {
-    //     this.$axios
-    //       .post('/result', {
-    //         // 把 search 页面的 input 内容映射到 searchContent 变量中并发送给后端
-    //         searchContent: this.searchForm.searchContent // 通过 v-model 把 input 框输入的内容存进 searchContent 中
-    //       })
-    //       // .then意思是指定回调函数
-    //       .then((successResponse) => {
-    //         // successResponse.data[0].title：就是符合条件的搜索结果的标题。其他以此类推
-    //         // console.log(successResponse.data[0].title)
-    //         console.log(successResponse.data[0].imgURL) // 数组，所有符合条件的结果数组
-    //         // console.log(successResponse.data[0])  // 数组第一个，里面包含id title abstracts
-    //         let list = successResponse.data
-    //         this.searchResults = list
-    //         if (successResponse.data.length === 0) {
-    //           alert('error')
-    //         }
-    //       })
-    //       // 指定发生错误时的回调函数
-    //       .catch((failResponse) => {})
-    //   }
-    // }
+  }
   },
   created(){
     this.Search()
+  },
 
-  }
 }
   </script>
   
@@ -543,6 +410,23 @@ export default {
     text-decoration: none;
     list-style: none;
     text-align: left;
+  }
+
+  .el-row {
+    margin: 0px 0 15px 10px;
+  }
+  .el-tag {
+    margin-right: 10px;
+  }
+
+  .el-button--medium {
+    padding: 0px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+  .el-card{
+    padding: 30%;
   }
   .el-radio{
     margin-right: 20px;
@@ -722,7 +606,7 @@ export default {
   
   .main-wrapper .results {
     position: absolute;
-    width: 560px;
+    width: 650px;
     height: 1360px;
     top: 40px;
     /* background-color: #bfc; */

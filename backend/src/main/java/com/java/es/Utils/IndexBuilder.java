@@ -1,6 +1,8 @@
 package com.java.es.Utils;
 
 import com.alibaba.fastjson.JSON;
+import com.java.es.dao.FoodTripleMapper;
+import com.java.es.model.FoodTriple;
 import com.java.es.pojo.Script;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -18,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,6 +33,8 @@ import static com.java.es.Utils.testUtil.CreateIndex;
 
 @Component
 public class IndexBuilder {
+    @Autowired
+    static FoodTripleMapper foodTripleMapper;
     public static void main(String[] Args) throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
@@ -107,7 +112,17 @@ public class IndexBuilder {
                 ArrayList<String> ingredient = new ArrayList<>();
                 for(int i = 0; i<liElements.size()-4;i++)
                 {
-                    if(!liElements.get(i).text().isEmpty()) ingredient.add(liElements.get(i).text());
+                    if(!liElements.get(i).text().isEmpty()) {
+                        String ingre=liElements.get(i).text();
+                        ingredient.add(ingre);
+                        FoodTriple foodTriple = new FoodTriple();
+                        foodTriple.setSource(text_title);
+                        foodTriple.setRelation("食材");
+                        foodTriple.setTarget(ingre);
+                        foodTripleMapper.insert(foodTriple);
+                        System.out.println(text_title);
+                        System.out.println(ingredient);
+                    }
                 }
                 ArrayList<String> steps = new ArrayList<>();
                 Elements elements1 = document.getElementsByClass("recipeStep_word noStep_word");

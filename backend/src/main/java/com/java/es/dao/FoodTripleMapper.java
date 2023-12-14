@@ -19,4 +19,6 @@ public interface FoodTripleMapper {
      * @mbg.generated
      */
     List<FoodTriple> selectAll();
+
+    List<FoodTriple> selectBySource(String cuisine);
 }

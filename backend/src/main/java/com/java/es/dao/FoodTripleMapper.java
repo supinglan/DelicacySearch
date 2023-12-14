@@ -21,4 +21,6 @@ public interface FoodTripleMapper {
     List<FoodTriple> selectAll();
 
     List<FoodTriple> selectBySource(String cuisine);
+
+    List<FoodTriple> selectByTarget(String target);
 }

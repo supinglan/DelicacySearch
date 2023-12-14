@@ -21,9 +21,10 @@ public class KnowledgeGraphService {
         //将first的所有内容加入result中
         List<FoodTriple> result = new ArrayList<>(first);
         for (FoodTriple foodTriple : first) {
-            List<FoodTriple> second = foodTripleMapper.selectBySource(foodTriple.getTarget());
+            List<FoodTriple> second = foodTripleMapper.selectByTarget(foodTriple.getTarget());
             result.addAll(second);
         }
+        System.out.println(result.size());
         return result;
     }
 }

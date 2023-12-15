@@ -50,7 +50,7 @@ public class ESqueryService {
         {
             ArrayList<Script> result = new ArrayList<>();
             try {
-                SearchRequest searchRequest = new SearchRequest("script_index");
+                SearchRequest searchRequest = new SearchRequest("test_kg");
                 MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
                         .field("title", 5.0F)  // 设置"title"字段的权重为5.0
                         .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0

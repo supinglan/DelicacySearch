@@ -1,6 +1,8 @@
 package com.java.es.Utils;
 
 import com.alibaba.fastjson.JSON;
+import com.java.es.dao.FoodTripleMapper;
+import com.java.es.model.FoodTriple;
 import com.java.es.pojo.Script;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -18,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,42 +33,44 @@ import static com.java.es.Utils.testUtil.CreateIndex;
 
 @Component
 public class IndexBuilder {
+    @Autowired
+    static FoodTripleMapper foodTripleMapper;
     public static void main(String[] Args) throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
 
-        GetIndexRequest getIndexRequest = new GetIndexRequest("script_index");
+        GetIndexRequest getIndexRequest = new GetIndexRequest("script_test");
         boolean indexExists = restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);
         if (indexExists) {
             // 创建删除索引请求
-            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("script_index");
+            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("script_test");
             // 发送删除索引请求
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
-            System.out.println("索引已存在并已删除：" + "script_index");
+            System.out.println("索引已存在并已删除：" + "script_test");
         } else {
             System.out.println("索引不存在：" +
 
 
                     "script_index");
         }
-        CreateIndexRequest request = new CreateIndexRequest("script_index");
+        CreateIndexRequest request = new CreateIndexRequest("script_test");
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);
 
 
-        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pigg_test_pinyin");
+        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pinyin_test");
         boolean indexExists2 = restHighLevelClient.indices().exists(getIndexRequest2, RequestOptions.DEFAULT);
         if (indexExists2) {
             // 创建删除索引请求
-            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pigg_test_pinyin");
+            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pinyin_test");
             // 发送删除索引请求
             restHighLevelClient.indices().delete(deleteIndexRequest1, RequestOptions.DEFAULT);
-            System.out.println("索引已存在并已删除：" + "pigg_test_pinyin");
+            System.out.println("索引已存在并已删除：" + "pinyin_test");
         } else {
-            System.out.println("索引不存在：" + "pigg_test_pinyin");
+            System.out.println("索引不存在：" + "pinyin_test");
         }
-        CreateIndexRequest request2 = new CreateIndexRequest("pigg_test_pinyin");
+        CreateIndexRequest request2 = new CreateIndexRequest("pinyin_test");
         request2.source(getIndexSettings(), XContentType.JSON);
 
         CreateIndexResponse response1 = restHighLevelClient.indices().create(request2, RequestOptions.DEFAULT);
@@ -107,7 +112,17 @@ public class IndexBuilder {
                 ArrayList<String> ingredient = new ArrayList<>();
                 for(int i = 0; i<liElements.size()-4;i++)
                 {
-                    if(!liElements.get(i).text().isEmpty()) ingredient.add(liElements.get(i).text());
+                    if(!liElements.get(i).text().isEmpty()) {
+                        String ingre=liElements.get(i).text();
+                        ingredient.add(ingre);
+                        FoodTriple foodTriple = new FoodTriple();
+                        foodTriple.setSource(text_title);
+                        foodTriple.setRelation("食材");
+                        foodTriple.setTarget(ingre);
+                        foodTripleMapper.insert(foodTriple);
+                        System.out.println(text_title);
+                        System.out.println(ingredient);
+                    }
                 }
                 ArrayList<String> steps = new ArrayList<>();
                 Elements elements1 = document.getElementsByClass("recipeStep_word noStep_word");

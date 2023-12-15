@@ -76,7 +76,7 @@ public class RecommendService
             int size = topNTerms.getBuckets().size();
             for (Bucket bucket : topNTerms.getBuckets()) {
                 String keyword = bucket.getKeyAsString();
-                ArrayList<Script> scripts=  squeryService.executeSearchQuery(keyword);
+                ArrayList<Script> scripts=  squeryService.executeSearchQuery(keyword, 0);
                 int i= 0;
                 for (Script script : scripts) {
                     String title = script.getTitle();
@@ -123,7 +123,7 @@ public class RecommendService
             int size = topNTerms.getBuckets().size();
             for (Bucket bucket : topNTerms.getBuckets()) {
                 String keyword = bucket.getKeyAsString();
-                ArrayList<Script> scripts=  squeryService.executeSearchQuery(keyword);
+                ArrayList<Script> scripts=  squeryService.executeSearchQuery(keyword,0);
                 int i= 0;
                 for (Script script : scripts) {
                     String title = script.getTitle();

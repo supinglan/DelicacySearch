@@ -18,7 +18,7 @@ public class KnowledgeGraphService {
     @Autowired
     private FoodTripleMapper foodTripleMapper;
     public List<FoodTriple> getKnowledgeGraph(String searchText) throws IOException {
-        String cuisine = squeryService.executeSearchQuery(searchText).get(0).getTitle();
+        String cuisine = squeryService.executeSearchQuery(searchText,0).get(0).getTitle();
         List<FoodTriple> first = foodTripleMapper.selectBySource(cuisine);
         //将first的所有内容加入result中
         List<FoodTriple> result = new ArrayList<>(first);

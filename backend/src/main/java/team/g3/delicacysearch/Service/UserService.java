@@ -1,4 +1,4 @@
-package com.java.es.Service;
+package team.g3.delicacysearch.Service;
 
 import org.springframework.stereotype.Service;
 

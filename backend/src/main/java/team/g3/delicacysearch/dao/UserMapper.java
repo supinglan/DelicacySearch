@@ -1,6 +1,7 @@
-package com.java.es.dao;
+package team.g3.delicacysearch.dao;
 
-import com.java.es.model.User;
+import team.g3.delicacysearch.model.User;
+
 import java.util.List;
 
 public interface UserMapper {

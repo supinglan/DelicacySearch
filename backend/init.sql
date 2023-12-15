@@ -7,3 +7,8 @@ CREATE TABLE `user` (
     password VARCHAR(128) NOT NULL,
     email VARCHAR(128) NOT NULL UNIQUE
 );
+CREATE TABLE food_triple (
+    source VARCHAR(255) NOT NULL,
+    relation VARCHAR(255) NOT NULL,
+    target VARCHAR(255) NOT NULL
+);

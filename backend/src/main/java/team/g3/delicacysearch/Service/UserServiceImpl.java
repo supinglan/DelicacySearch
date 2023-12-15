@@ -1,7 +1,7 @@
-package com.java.es.Service;
+package team.g3.delicacysearch.Service;
 
-import com.java.es.dao.UserMapper;
-import com.java.es.model.User;
+import team.g3.delicacysearch.dao.UserMapper;
+import team.g3.delicacysearch.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

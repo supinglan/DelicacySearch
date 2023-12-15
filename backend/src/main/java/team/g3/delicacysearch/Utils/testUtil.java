@@ -1,8 +1,11 @@
-package com.java.es.Utils;
+package team.g3.delicacysearch.Utils;
 
 
 import com.alibaba.fastjson.JSON;
-import com.java.es.pojo.Script;
+import team.g3.delicacysearch.dao.FoodTripleMapper;
+import team.g3.delicacysearch.model.FoodTriple;
+import team.g3.delicacysearch.pojo.Script;
+
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -17,10 +20,9 @@ import org.jsoup.nodes.Document;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
@@ -31,11 +33,14 @@ public class testUtil {
     static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
     static String referer = "https://www.xiachufang.com/";
     static Integer MAX_DOCUMENT = 200;
+    @Autowired
+    static FoodTripleMapper foodTripleMapper;
     public static void CreateIndex () throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")));
-        int num = 300000;
+
+                        new HttpHost("120.55.14.3", 9200, "http")));
+        int num = 114514;
         ArrayList<String> categories = new ArrayList<>();
         HashSet<String> finalURLs = new HashSet<>();
         try {
@@ -81,6 +86,13 @@ public class testUtil {
                                         Elements names = ingsDiv.select("td.name");
                                         for (Element name : names) {
                                             String ingredient = name.text();
+                                            FoodTriple foodTriple = new FoodTriple();
+                                            foodTriple.setSource(text_title);
+                                            foodTriple.setRelation("食材");
+                                            foodTriple.setTarget(ingredient);
+                                            foodTripleMapper.insert(foodTriple);
+                                            System.out.println(text_title);
+                                            System.out.println(ingredient);
                                             ingredients.add(ingredient);
                                         }
                                     } else {

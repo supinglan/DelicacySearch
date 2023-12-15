@@ -1,6 +1,6 @@
-package com.java.es.Service;
+package team.g3.delicacysearch.Service;
 
-import com.java.es.pojo.Script;
+import team.g3.delicacysearch.pojo.Script;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;

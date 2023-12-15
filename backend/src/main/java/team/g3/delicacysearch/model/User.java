@@ -1,4 +1,4 @@
-package com.java.es.model;
+package team.g3.delicacysearch.model;
 
 import java.io.Serializable;
 

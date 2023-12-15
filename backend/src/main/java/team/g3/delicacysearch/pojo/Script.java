@@ -1,4 +1,4 @@
-package com.java.es.pojo;
+package team.g3.delicacysearch.pojo;
 
 
 import lombok.AllArgsConstructor;

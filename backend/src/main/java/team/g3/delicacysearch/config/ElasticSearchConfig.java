@@ -1,4 +1,4 @@
-package com.java.es.config;
+package team.g3.delicacysearch.config;
 
 
 import org.apache.http.HttpHost;
@@ -16,6 +16,7 @@ public class ElasticSearchConfig {
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3",9200, "http")));
+        return client;
     }
 
 }

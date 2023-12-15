@@ -1,6 +1,6 @@
-package com.java.es.Service;
+package team.g3.delicacysearch.Service;
 
-import com.java.es.pojo.Script;
+import team.g3.delicacysearch.pojo.Script;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -50,7 +50,7 @@ public class ESqueryService {
         {
             ArrayList<Script> result = new ArrayList<>();
             try {
-                SearchRequest searchRequest = new SearchRequest("script_index");
+                SearchRequest searchRequest = new SearchRequest("test_kg");
                 MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
                         .field("title", 10.0F)  // 设置"title"字段的权重为5.0
                         .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
@@ -105,9 +105,9 @@ public class ESqueryService {
                     }
                     float score = hit.getScore();
                     // 在这里执行您希望的操作，比如打印或处理结果
-                    System.out.println("菜名: " + title);
-                    System.out.println("摘要:" + Abstract);
-                    System.out.println(" ");
+//                    System.out.println("菜名: " + title);
+//                    System.out.println("摘要:" + Abstract);
+//                    System.out.println(" ");
 //                System.out.println("网页地址: " + url);
 //                System.out.println("图片地址: " + pic_url);
                     Script ele = new Script(pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);

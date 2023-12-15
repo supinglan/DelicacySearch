@@ -1,6 +1,6 @@
-package com.java.es.Controller;
+package team.g3.delicacysearch.Controller;
 
-import com.java.es.Service.UserService;
+import team.g3.delicacysearch.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

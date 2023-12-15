@@ -47,10 +47,7 @@ public class IndexBuilder {
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             System.out.println("索引已存在并已删除：" + "script_test");
         } else {
-            System.out.println("索引不存在：" +
-
-
-                    "script_index");
+            System.out.println("索引不存在：" + "script_index");
         }
         CreateIndexRequest request = new CreateIndexRequest("script_test");
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
@@ -86,7 +83,7 @@ public class IndexBuilder {
 
 
         //美食天下
-        for (int t = 12; t <= 500; t++) {
+        for (int t = 12; t <= 700000; t++) {
             String url = "https://home.meishichina.com/recipe-" + t + ".html";
             try {
                 Document document = Jsoup.parse(new URL(url), 30000);

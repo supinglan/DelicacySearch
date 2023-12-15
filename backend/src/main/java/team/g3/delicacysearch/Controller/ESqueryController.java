@@ -2,9 +2,7 @@ package team.g3.delicacysearch.Controller;
 
 
 import team.g3.delicacysearch.Service.ESqueryService;
-import team.g3.delicacysearch.Service.IngredientSearchService;
 import team.g3.delicacysearch.Service.RecommendService;
-import team.g3.delicacysearch.Service.StepsSearchService;
 import team.g3.delicacysearch.pojo.Script;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController

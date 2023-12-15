@@ -25,9 +25,11 @@ import java.util.regex.Pattern;
 public class ESqueryService {
     @Autowired
     public RestHighLevelClient elasticsearchClient;
+    private final static String index_source = "test_kg";
+    private final static String pinyin_source = "test_kg_pingyin";
 
-    public ArrayList<Script> executeSearchQuery(String SearchText) throws IOException {
-        if(SearchText.toLowerCase().contains("or") || SearchText.contains("-") || SearchText.contains("*") || SearchText.matches(".*[\"“”].*")) return preProcess(SearchText);
+    public ArrayList<Script> executeSearchQuery(String SearchText, Integer type) throws IOException {
+        if(SearchText.toLowerCase().contains("or") || SearchText.contains("-") || SearchText.contains("*") || SearchText.matches(".*[\"“”].*")) return preProcess(SearchText, type);
         //判断输入的搜索语句是否含有拼音
         boolean containsLetter = Pattern.matches(".*[a-zA-Z].*", SearchText);
         //若包含。我们按照自动补全的函数，获取一系列的汉字String，再搜索这些汉字String
@@ -36,7 +38,7 @@ public class ESqueryService {
             List<String> results = getNames(SearchText);
             ArrayList<Script> total_results = new ArrayList<>();
             for (String result : results) {
-                ArrayList<Script> part_results = executeSearchQuery(result);
+                ArrayList<Script> part_results = executeSearchQuery(result, type);
                 for (Script partResult : part_results) {
                     if (!total_results.contains(partResult)) {
                         total_results.add(partResult);
@@ -50,13 +52,26 @@ public class ESqueryService {
         {
             ArrayList<Script> result = new ArrayList<>();
             try {
-                SearchRequest searchRequest = new SearchRequest("test_kg");
-                MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                        .field("title", 5.0F)  // 设置"title"字段的权重为5.0
+                SearchRequest searchRequest = new SearchRequest(index_source);
+                MultiMatchQueryBuilder queryBuilder;
+                if(type == 0){
+                queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                        .field("title", 10.0F)  // 设置"title"字段的权重为5.0
                         .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
                         .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
                         .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
-                        .field("origin", 0.5F);
+                        .field("origin", 0.5F); }
+                else if(type == 1)
+                {
+                    queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                            .field("ingredient", 5.0F);  // 设置"ingredient"字段的权重为1.5;
+                }
+                else if(type == 2)
+                {
+                    queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                            .field("steps", 5.0F);  // 设置"steps"字段的权重为1.0
+                }
+                else return null;
                 searchRequest.source().query(queryBuilder);
                 searchRequest.source().fetchSource(true);
                 searchRequest.source().sort("_score", SortOrder.DESC);
@@ -121,14 +136,16 @@ public class ESqueryService {
         }
     }
 
+
+
     //汉字的自动补全功能，返回所有包含输入的标题
     public ArrayList<String> AutoFill(String SearchText)
     {
         ArrayList<String> result = new ArrayList<>();
         try {
-            SearchRequest searchRequest = new SearchRequest("script_index");
+            SearchRequest searchRequest = new SearchRequest(index_source);
             MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
-                    .field("title", 3.14F)  // 设置"title"字段的权重为3.0
+                    .field("title", 10.0F)  // 设置"title"字段的权重为3.0
                     .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
                     .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
                     .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
@@ -161,7 +178,7 @@ public class ESqueryService {
     public ArrayList<String> getNames(String SearchText) {
         ArrayList<String> result = new ArrayList<>();
         try {
-            SearchRequest searchRequest = new SearchRequest("pigg_test_pinyin");
+            SearchRequest searchRequest = new SearchRequest(pinyin_source);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
             sourceBuilder.query(QueryBuilders.matchQuery("name.pinyin", SearchText));
             searchRequest.source(sourceBuilder);
@@ -193,83 +210,147 @@ public class ESqueryService {
     }
 
     //按照标签搜索
-    public ArrayList<Script> searchByTags(String SearchText, ArrayList<Integer> searchOps) throws IOException {
-        ArrayList<Script> results = executeSearchQuery(SearchText);
-        ArrayList<String> tags = new ArrayList<>();
+    public ArrayList<Script> searchByTags(String SearchText, ArrayList<Integer> searchOps, Integer type) throws IOException {
+        SearchRequest searchRequest = new SearchRequest(index_source);
+        ArrayList<Script> result = new ArrayList<>();
+        MultiMatchQueryBuilder queryBuilder;
+        if(type == 0){
+            queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                    .field("title", 10.0F)  // 设置"title"字段的权重为5.0
+                    .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
+                    .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
+                    .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
+                    .field("origin", 0.5F);
+        }
+        else if(type == 1)
+        {
+            queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                    .field("ingredient", 5.0F);  // 设置"ingredient"字段的权重为1.5;
+        }
+        else if(type == 2)
+        {
+            queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                    .field("steps", 5.0F);  // 设置"steps"字段的权重为1.0
+        }
+        else return null;
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
         //烹调方式
         switch(searchOps.get(0))
         {
-            case 1: tags.add("煎"); break;
-            case 2: tags.add("蒸"); break;
-            case 3: tags.add("炖"); break;
-            case 4: tags.add("烧"); break;
-            case 5: tags.add("炸"); break;
-            case 6: tags.add("卤"); break;
-            case 7: tags.add("干锅"); break;
-            case 8: tags.add("火锅"); break;
+            case 1: boolQuery.must(QueryBuilders.matchQuery("tag", "煎")); break;
+            case 2: boolQuery.must(QueryBuilders.matchQuery("tag", "蒸")); break;
+            case 3: boolQuery.must(QueryBuilders.matchQuery("tag", "炖")); break;
+            case 4: boolQuery.must(QueryBuilders.matchQuery("tag", "烧")); break;
+            case 5: boolQuery.must(QueryBuilders.matchQuery("tag", "炸")); break;
+            case 6: boolQuery.must(QueryBuilders.matchQuery("tag", "卤")); break;
+            case 7: boolQuery.must(QueryBuilders.matchQuery("tag", "干锅")); break;
+            case 8: boolQuery.must(QueryBuilders.matchQuery("tag", "火锅")); break;
             case 0:
             default: break;
         }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
         switch(searchOps.get(1))
         {
-            case 1: tags.add("辣"); break;
-            case 2: tags.add("咖喱"); break;
-            case 3: tags.add("蒜香"); break;
-            case 4: tags.add("酸甜"); break;
-            case 5: tags.add("奶香"); break;
-            case 6: tags.add("孜然"); break;
-            case 7: tags.add("鱼香"); break;
-            case 8: tags.add("五香"); break;
-            case 9: tags.add("清淡"); break;
+            case 1: boolQuery.must(QueryBuilders.matchQuery("tag", "辣")); break;
+            case 2: boolQuery.must(QueryBuilders.matchQuery("tag", "咖喱")); break;
+            case 3: boolQuery.must(QueryBuilders.matchQuery("tag", "蒜香")); break;
+            case 4: boolQuery.must(QueryBuilders.matchQuery("tag", "酸甜")); break;
+            case 5: boolQuery.must(QueryBuilders.matchQuery("tag", "奶香")); break;
+            case 6: boolQuery.must(QueryBuilders.matchQuery("tag", "孜然")); break;
+            case 7: boolQuery.must(QueryBuilders.matchQuery("tag", "鱼香")); break;
+            case 8: boolQuery.must(QueryBuilders.matchQuery("tag", "五香")); break;
+            case 9: boolQuery.must(QueryBuilders.matchQuery("tag", "清淡")); break;
             case 0:
             default: break;
         }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
+
+
         switch(searchOps.get(2))
         {
-            case 1: tags.add( "早餐"); break;
-            case 2: tags.add( "下午茶"); break;
-            case 3: tags.add( "二人世界"); break;
-            case 4: tags.add( "正餐"); break;
+            case 1: boolQuery.must(QueryBuilders.matchQuery("tag", "早餐")); break;
+            case 2: boolQuery.must(QueryBuilders.matchQuery("tag", "下午茶")); break;
+            case 3: boolQuery.must(QueryBuilders.matchQuery("tag", "二人世界")); break;
+            case 4: boolQuery.must(QueryBuilders.matchQuery("tag", "正餐")); break;
             case 0:
             default: break;
         }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
-        }
-        tags.clear();
+
         switch(searchOps.get(3))
         {
-            case 1: tags.add("烘焙"); break;
-            case 2: tags.add("汤羹"); break;
-            case 3: tags.add("主食"); break;
-            case 4: tags.add("小吃"); break;
-            case 5: tags.add("荤菜"); break;
-            case 6: tags.add("素菜"); break;
-            case 7: tags.add("凉菜"); break;
+            case 1: boolQuery.must(QueryBuilders.matchQuery("tag", "烘焙")); break;
+            case 2: boolQuery.must(QueryBuilders.matchQuery("tag", "汤羹")); break;
+            case 3: boolQuery.must(QueryBuilders.matchQuery("tag", "主食")); break;
+            case 4: boolQuery.must(QueryBuilders.matchQuery("tag", "小吃")); break;
+            case 5: boolQuery.must(QueryBuilders.matchQuery("tag", "荤菜")); break;
+            case 6: boolQuery.must(QueryBuilders.matchQuery("tag", "素菜")); break;
+            case 7: boolQuery.must(QueryBuilders.matchQuery("tag", "凉菜")); break;
             case 0:
             default: break;
         }
-        if(!tags.isEmpty())
-        {
-            results.removeIf(script -> !script.getTag().contains(tags.get(0)));
+        boolQuery.must(queryBuilder);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(boolQuery);
+        searchRequest.source(sourceBuilder);
+        searchRequest.source().fetchSource(true);
+        searchRequest.source().sort("_score", SortOrder.DESC);
+        searchRequest.source().size(500);
+        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = searchResponse.getHits();
+        long hitnum = hits.getTotalHits().value;
+        if(hitnum == 0) System.out.println("无结果！");
+        for (SearchHit hit : hits) {
+            // 处理每个命中的文档
+            String url = hit.getSourceAsMap().get("html_url").toString();
+            String pic_url = hit.getSourceAsMap().get("pict_url").toString();
+            String title = hit.getSourceAsMap().get("title").toString();
+            String Abstract = hit.getSourceAsMap().get("abstract").toString();
+            String source = hit.getSourceAsMap().get("origin").toString();
+            Integer clicks = Integer.valueOf(hit.getSourceAsMap().get("clicks").toString());
+            ArrayList<String> steps = new ArrayList<>();
+            List<Object> stepsList = (List<Object>) hit.getSourceAsMap().get("steps");
+            if (stepsList != null) {
+                for (Object step : stepsList) {
+                    if (step instanceof String) {
+                        steps.add((String) step);
+                    }
+                }
+            }
+            ArrayList<String> ingredients = new ArrayList<>();
+            List<Object> ingreList = (List<Object>) hit.getSourceAsMap().get("ingredient");
+            if (ingreList != null) {
+                for (Object step : ingreList) {
+                    if (step instanceof String) {
+                        ingredients.add((String) step);
+                    }
+                }
+            }
+            ArrayList<String> tags = new ArrayList<>();
+            List<Object> tagLists = (List<Object>) hit.getSourceAsMap().get("tag");
+            if(tagLists != null)
+            {
+                for(Object tag : tagLists)
+                {
+                    if(tag instanceof  String)
+                    {
+                        tags.add((String)tag);
+                    }
+                }
+            }
+            float score = hit.getScore();
+            // 在这里执行您希望的操作，比如打印或处理结果
+            System.out.println("菜名: " + title);
+            System.out.println("摘要:" + Abstract);
+            System.out.println(" ");
+//                System.out.println("网页地址: " + url);
+//                System.out.println("图片地址: " + pic_url);
+            Script ele = new Script(pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
+            result.add(ele);
         }
-        return results;
+        return result;
     }
 
     //综合排序（相关度60% + 点击量40%）
-    public ArrayList<Script> searchByAll(String SearchText) throws IOException {
-        ArrayList<Script> results = executeSearchQuery(SearchText);
+    public ArrayList<Script> searchByAll(String SearchText, Integer type) throws IOException {
+        ArrayList<Script> results = executeSearchQuery(SearchText, type);
         // 按照 score 字段排序
         results.sort(Comparator.comparingDouble(Script::getScore).reversed());
         // 计算 click 排名
@@ -290,31 +371,203 @@ public class ESqueryService {
     }
 
     //根据点击量排序
-    public ArrayList<Script> searchByClick(String SearchText) throws IOException {
-        ArrayList<Script> results = executeSearchQuery(SearchText);
+    public ArrayList<Script> searchByClick(String SearchText, Integer type) throws IOException {
+        ArrayList<Script> results = executeSearchQuery(SearchText, type);
         results.sort(Comparator.comparingInt(Script::getClicks).reversed()); // 根据 clicks 进行倒序排序
         return results;
     }
 
 
-    private ArrayList<Script> preProcess(String SearchText) throws IOException {
+    private ArrayList<Script> preProcess(String SearchText, Integer type) throws IOException {
         ArrayList<Script> searchResults = new ArrayList<>();
         if(SearchText.toLowerCase().contains("or"))
         {
-            String[] subStrings;
-            subStrings = SearchText.split("(?i)\\bor\\b");
-            for (String subString : subStrings) {
-               searchResults.addAll(executeSearchQuery(subString));
+            String[] parts = SearchText.split("(?i)\\bor\\b");
+            String firstPart = parts[0];
+            String secondPart = parts[1];
+            SearchRequest searchRequest = new SearchRequest(index_source);
+            MultiMatchQueryBuilder queryBuilder;
+            if(type == 0){
+                queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                        .field("title", 10.0F)  // 设置"title"字段的权重为5.0
+                        .field("abstract", 2.0F)  // 设置"abstract"字段的权重为2.0
+                        .field("ingredient", 1.5F)  // 设置"ingredient"字段的权重为1.5
+                        .field("steps", 1.0F)  // 设置"steps"字段的权重为1.0
+                        .field("origin", 0.5F);
+            }
+            else if(type == 1)
+            {
+                queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                        .field("ingredient", 5.0F);  // 设置"ingredient"字段的权重为1.5;
+            }
+            else if(type == 2)
+            {
+                queryBuilder = QueryBuilders.multiMatchQuery(SearchText)
+                        .field("steps", 5.0F);  // 设置"steps"字段的权重为1.0
+            }
+            else return null;
+            // 创建一个布尔查询
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+            // 添加"should"子句以实现"或"逻辑
+            boolQuery.should(QueryBuilders.matchQuery("title", firstPart));
+            boolQuery.should(QueryBuilders.matchQuery("title", secondPart));
+            boolQuery.should(QueryBuilders.matchQuery("abstract", firstPart));
+            boolQuery.should(QueryBuilders.matchQuery("abstract", secondPart));
+            boolQuery.should(QueryBuilders.matchQuery("ingredient", firstPart));
+            boolQuery.should(QueryBuilders.matchQuery("ingredient", secondPart));
+            boolQuery.should(QueryBuilders.matchQuery("steps", firstPart));
+            boolQuery.should(QueryBuilders.matchQuery("steps", secondPart));
+            boolQuery.should(QueryBuilders.matchQuery("origin", firstPart));
+            boolQuery.should(QueryBuilders.matchQuery("origin", secondPart));
+
+            // 将多重匹配查询和布尔查询组合起来
+            boolQuery.must(queryBuilder);
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+            sourceBuilder.query(boolQuery);
+            searchRequest.source(sourceBuilder);
+            searchRequest.source().fetchSource(true);
+            searchRequest.source().sort("_score", SortOrder.DESC);
+            SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+            SearchHits hits = searchResponse.getHits();
+            long hitnum = hits.getTotalHits().value;
+            if(hitnum == 0) System.out.println("无结果！");
+            for (SearchHit hit : hits) {
+                // 处理每个命中的文档
+                String url = hit.getSourceAsMap().get("html_url").toString();
+                String pic_url = hit.getSourceAsMap().get("pict_url").toString();
+                String title = hit.getSourceAsMap().get("title").toString();
+                String Abstract = hit.getSourceAsMap().get("abstract").toString();
+                String source = hit.getSourceAsMap().get("origin").toString();
+                Integer clicks = Integer.valueOf(hit.getSourceAsMap().get("clicks").toString());
+                ArrayList<String> steps = new ArrayList<>();
+                List<Object> stepsList = (List<Object>) hit.getSourceAsMap().get("steps");
+                if (stepsList != null) {
+                    for (Object step : stepsList) {
+                        if (step instanceof String) {
+                            steps.add((String) step);
+                        }
+                    }
+                }
+                ArrayList<String> ingredients = new ArrayList<>();
+                List<Object> ingreList = (List<Object>) hit.getSourceAsMap().get("ingredient");
+                if (ingreList != null) {
+                    for (Object step : ingreList) {
+                        if (step instanceof String) {
+                            ingredients.add((String) step);
+                        }
+                    }
+                }
+                ArrayList<String> tags = new ArrayList<>();
+                List<Object> tagLists = (List<Object>) hit.getSourceAsMap().get("tag");
+                if (tagLists != null) {
+                    for (Object tag : tagLists) {
+                        if (tag instanceof String) {
+                            tags.add((String) tag);
+                        }
+                    }
+                }
+                float score = hit.getScore();
+                // 在这里执行您希望的操作，比如打印或处理结果
+                System.out.println("菜名: " + title);
+                System.out.println("摘要:" + Abstract);
+                System.out.println(" ");
+//                System.out.println("网页地址: " + url);
+//                System.out.println("图片地址: " + pic_url);
+                Script ele = new Script(pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
+                searchResults.add(ele);
             }
         }
         else if(SearchText.contains("-"))
         {
-            String[] subStrings = SearchText.split("-");
-            String result = subStrings[0];
-            for (int i = 1; i < subStrings.length; i++) {
-                result = result.replace(subStrings[i], "");
+            String[] parts = SearchText.split("-");
+            String firstPart = parts[0];
+            String secondPart = parts[1];
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+            // 添加“must”子句以确保结果中包含第一个部分
+            if(type == 0) {
+                boolQuery.must(QueryBuilders.multiMatchQuery(firstPart, "title", "abstract", "ingredient", "steps", "origin")
+                        .field("title", 10.0F)
+                        .field("abstract", 2.0F)
+                        .field("ingredient", 1.5F)
+                        .field("steps", 1.0F)
+                        .field("origin", 0.5F));
             }
-            searchResults.addAll(executeSearchQuery(result));
+            else if(type == 1)
+            {
+                boolQuery.must(QueryBuilders.multiMatchQuery(firstPart,  "ingredient")
+                        .field("ingredient", 5.0F));}
+            else if(type == 2)
+            {
+                boolQuery.must(QueryBuilders.multiMatchQuery(firstPart,  "steps")
+                        .field("steps", 5.0F));}
+            else return null;
+            // 添加“must_not”子句以确保结果中不包含第二个部分
+            if(type == 0)
+            boolQuery.mustNot(QueryBuilders.multiMatchQuery(secondPart, "title", "abstract", "ingredient", "steps", "origin"));
+            else if(type == 1)
+                boolQuery.mustNot(QueryBuilders.multiMatchQuery(secondPart,  "ingredient"));
+            else boolQuery.mustNot(QueryBuilders.multiMatchQuery(secondPart,  "steps"));
+            // 将布尔查询设置为主查询
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+            sourceBuilder.query(boolQuery);
+            // 将查询请求与新的搜索源建立关联
+            SearchRequest searchRequest = new SearchRequest(index_source);
+            searchRequest.source(sourceBuilder);
+            searchRequest.source().fetchSource(true);
+            searchRequest.source().sort("_score", SortOrder.DESC);
+            SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+            SearchHits hits = searchResponse.getHits();
+            long hitnum = hits.getTotalHits().value;
+            if(hitnum == 0) System.out.println("无结果！");
+            for (SearchHit hit : hits) {
+                // 处理每个命中的文档
+                String url = hit.getSourceAsMap().get("html_url").toString();
+                String pic_url = hit.getSourceAsMap().get("pict_url").toString();
+                String title = hit.getSourceAsMap().get("title").toString();
+                String Abstract = hit.getSourceAsMap().get("abstract").toString();
+                String source = hit.getSourceAsMap().get("origin").toString();
+                Integer clicks = Integer.valueOf(hit.getSourceAsMap().get("clicks").toString());
+                ArrayList<String> steps = new ArrayList<>();
+                List<Object> stepsList = (List<Object>) hit.getSourceAsMap().get("steps");
+                if (stepsList != null) {
+                    for (Object step : stepsList) {
+                        if (step instanceof String) {
+                            steps.add((String) step);
+                        }
+                    }
+                }
+                ArrayList<String> ingredients = new ArrayList<>();
+                List<Object> ingreList = (List<Object>) hit.getSourceAsMap().get("ingredient");
+                if (ingreList != null) {
+                    for (Object step : ingreList) {
+                        if (step instanceof String) {
+                            ingredients.add((String) step);
+                        }
+                    }
+                }
+                ArrayList<String> tags = new ArrayList<>();
+                List<Object> tagLists = (List<Object>) hit.getSourceAsMap().get("tag");
+                if(tagLists != null)
+                {
+                    for(Object tag : tagLists)
+                    {
+                        if(tag instanceof  String)
+                        {
+                            tags.add((String)tag);
+                        }
+                    }
+                }
+                float score = hit.getScore();
+                // 在这里执行您希望的操作，比如打印或处理结果
+                System.out.println("菜名: " + title);
+                System.out.println("摘要:" + Abstract);
+                System.out.println(" ");
+//                System.out.println("网页地址: " + url);
+//                System.out.println("图片地址: " + pic_url);
+                Script ele = new Script(pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
+                searchResults.add(ele);
+            }
         }
         else if(SearchText.contains("*"))
         {
@@ -324,15 +577,15 @@ public class ESqueryService {
             {
                 ArrayList<String> searchers = pinyin_all(result);
                 for (String searcher : searchers) {
-                    searchResults.addAll(executeSearchQuery(searcher));
+                    searchResults.addAll(executeSearchQuery(searcher, type));
                 }
             }
             else
             {
                 ArrayList<String> searchers = AutoFill(result);
-                searchResults.addAll(executeSearchQuery(result));
+                searchResults.addAll(executeSearchQuery(result, type));
                 for (String searcher : searchers) {
-                    searchResults.addAll(executeSearchQuery(searcher));
+                    searchResults.addAll(executeSearchQuery(searcher, type));
                 }
             }
         }
@@ -344,8 +597,9 @@ public class ESqueryService {
             while (matcher.find()) {
                 resultList.add(matcher.group(1));
             }
-            SearchRequest searchRequest = new SearchRequest("script_index");
+            SearchRequest searchRequest = new SearchRequest(index_source);
             BoolQueryBuilder  boolQuery = QueryBuilders.boolQuery();
+            if(type == 0)
             for (String str : resultList) {
                 boolQuery.must(
                         QueryBuilders.boolQuery()
@@ -356,6 +610,20 @@ public class ESqueryService {
                                 .should(QueryBuilders.matchPhraseQuery("origin", str))
                 );
             }
+            else if(type == 1)
+                for (String str : resultList) {
+                    boolQuery.must(
+                            QueryBuilders.boolQuery()
+                                    .must(QueryBuilders.matchPhraseQuery("ingredient", str))
+                    );
+                }
+            else
+                for (String str : resultList) {
+                    boolQuery.must(
+                            QueryBuilders.boolQuery()
+                                    .must(QueryBuilders.matchPhraseQuery("steps", str))
+                    );
+                }
             searchRequest.source().query(boolQuery);
             searchRequest.source().fetchSource(true);
             searchRequest.source().sort("_score", SortOrder.DESC);

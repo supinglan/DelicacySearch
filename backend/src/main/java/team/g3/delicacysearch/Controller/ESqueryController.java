@@ -21,20 +21,20 @@ public class ESqueryController {
     @Autowired
     private ESqueryService squeryService;
     @Autowired
-    private IngredientSearchService ingredientSearchService;
-    @Autowired
-    private StepsSearchService stepsSearchService;
-    @Autowired
     private RecommendService recommendService;
-    @RequestMapping(value = "/elastic", method = RequestMethod.POST)
-    public ArrayList<Script> search_all(String SearchText,String username) throws IOException {
-        System.out.println("SearchText"+SearchText);
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category, Integer type,String username) throws IOException {
         if(username!=null){
-        recommendService.updateSearchHistory(username, SearchText);}
+            recommendService.updateSearchHistory(username, SearchText);}
         else{
             recommendService.updateSearchHistory("default", SearchText);
         }
-       return squeryService.executeSearchQuery(SearchText);
+        ArrayList<Integer> ints = new ArrayList<>();
+        ints.add(Method);
+        ints.add(Taste);
+        ints.add(Scene);
+        ints.add(Category);
+        return squeryService.searchByTags(SearchText, ints, type);
     }
 
     @RequestMapping(value = "/autofill", method = RequestMethod.POST)
@@ -55,40 +55,16 @@ public class ESqueryController {
         return result;
     }
 
-
     //点击量排序
     @RequestMapping(value = "/clickSort", method = RequestMethod.POST)
-    public ArrayList<Script> clickSort(String SearchText) throws IOException {
-        return squeryService.searchByClick(SearchText);
+    public ArrayList<Script> clickSort(String SearchText, Integer type) throws IOException {
+        return squeryService.searchByClick(SearchText, type);
     }
-
 
     //综合排序
     @RequestMapping(value = "/combinedRank", method = RequestMethod.POST)
-    public ArrayList<Script> combinedRank(String SearchText) throws IOException {
-        return squeryService.searchByAll(SearchText);
+    public ArrayList<Script> combinedRank(String SearchText, Integer type) throws IOException {
+        return squeryService.searchByAll(SearchText, type);
     }
 
-    //筛选标签
-    @RequestMapping(value = "/selectByTag", method = RequestMethod.POST)
-    public ArrayList<Script> selectByTag(String SearchText, Integer a1, Integer a2, Integer a3, Integer a4) throws IOException {
-        ArrayList<Integer> ints = new ArrayList<>();
-        ints.add(a1);
-        ints.add(a2);
-        ints.add(a3);
-        ints.add(a4);
-        return squeryService.searchByTags(SearchText, ints);
-    }
-
-    //食材搜索
-    @RequestMapping(value = "/ingredients", method = RequestMethod.POST)
-    public ArrayList<Script> ingredients(String SearchText) throws IOException {
-        return ingredientSearchService.executeSearchQuery(SearchText);
-    }
-
-    //步骤搜索
-    @RequestMapping(value = "/steps", method = RequestMethod.POST)
-    public ArrayList<Script> steps(String SearchText) throws IOException {
-        return stepsSearchService.executeSearchQuery(SearchText);
-    }
 }

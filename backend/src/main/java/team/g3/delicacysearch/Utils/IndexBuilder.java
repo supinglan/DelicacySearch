@@ -83,7 +83,7 @@ public class IndexBuilder {
 
 
         //美食天下
-        for (int t = 12; t <= 500; t++) {
+        for (int t = 12; t <= 700000; t++) {
             String url = "https://home.meishichina.com/recipe-" + t + ".html";
             try {
                 Document document = Jsoup.parse(new URL(url), 30000);

@@ -32,6 +32,7 @@ public class ESqueryController {
     private RecommendService recommendService;
 
 
+
     @RequestMapping(value = "/elastic", method = RequestMethod.POST)
     public ArrayList<Script> search_all(String SearchText,String username) throws IOException {
         System.out.println("SearchText"+SearchText);
@@ -96,81 +97,6 @@ public class ESqueryController {
     @RequestMapping(value = "/steps", method = RequestMethod.POST)
     public ArrayList<Script> steps(String SearchText) throws IOException {
         return stepsSearchService.executeSearchQuery(SearchText);
-    }
-
-    //相关搜索
-    @RequestMapping(value = "/recommend", method = RequestMethod.POST)
-    public List<String> recommend(String username) throws IOException {
-        List<String> result = new ArrayList<>();
-        if(username!=null){
-            return recommendService.getRecommend(username);}
-        else{
-            return recommendService.getRecommend("default");
-        }
-    }
-
-    //热搜
-    @RequestMapping(value = "/hot", method = RequestMethod.POST)
-    public ArrayList<String> hot() throws IOException {
-        ArrayList<String> dishes = new ArrayList<>();
-        dishes.add("红烧肉");
-        dishes.add("红烧排骨");
-        dishes.add("可乐鸡翅");
-        dishes.add("糖醋排骨");
-        dishes.add("水煮鱼");
-        dishes.add("红烧鱼");
-        dishes.add("鱼香肉丝");
-        dishes.add("水煮肉片");
-        dishes.add("鲫鱼豆腐汤");
-        dishes.add("酸辣土豆丝");
-        dishes.add("乌鸡汤");
-        dishes.add("麻婆豆腐");
-        dishes.add("鲫鱼汤");
-        dishes.add("炸酱面");
-        dishes.add("宫保鸡丁");
-        dishes.add("红烧茄子");
-        dishes.add("鱼香茄子");
-        dishes.add("啤酒鸭");
-        dishes.add("银耳汤");
-        dishes.add("红烧牛肉");
-        dishes.add("辣子鸡");
-        dishes.add("牛肉炖土豆");
-        dishes.add("香辣虾");
-        dishes.add("红烧狮子头");
-        dishes.add("小鸡炖蘑菇");
-        dishes.add("糖醋里脊");
-        dishes.add("土豆炖牛肉");
-        dishes.add("红烧带鱼");
-        dishes.add("大盘鸡");
-        dishes.add("冬瓜汤");
-        dishes.add("醋溜白菜");
-        dishes.add("红烧鸡翅");
-        dishes.add("东坡肉");
-        dishes.add("罗宋汤");
-        dishes.add("酸辣汤");
-        dishes.add("排骨汤");
-        dishes.add("毛血旺");
-        dishes.add("泡椒凤爪");
-        dishes.add("辣子鸡丁");
-        dishes.add("椒盐虾");
-        dishes.add("家常豆腐");
-        dishes.add("蚂蚁上树");
-        dishes.add("芹菜炒香干");
-        dishes.add("冬瓜排骨汤");
-        dishes.add("奥尔良烤翅");
-        dishes.add("农家小炒肉");
-        dishes.add("酱爆鸡丁");
-        dishes.add("四喜丸子");
-        dishes.add("凉拌黑木耳");
-        dishes.add("酸辣白菜");
-        dishes.add("麻辣小龙虾");
-        dishes.add("冬瓜排骨汤");
-        dishes.add("清蒸鲈鱼");
-        dishes.add("孜然羊肉");
-        Collections.shuffle(dishes);
-
-        // Select the first 8 dishes
-        return new ArrayList<>(dishes.subList(0, 8));
     }
 
 }

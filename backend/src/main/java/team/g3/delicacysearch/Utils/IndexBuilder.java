@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import team.g3.delicacysearch.dao.FoodTripleMapper;
 import team.g3.delicacysearch.model.FoodTriple;
 import team.g3.delicacysearch.pojo.Script;
+
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.index.IndexRequest;

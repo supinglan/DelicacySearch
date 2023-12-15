@@ -1,6 +1,8 @@
+
 package team.g3.delicacysearch.dao;
 
 import team.g3.delicacysearch.model.FoodTriple;
+
 import java.util.List;
 
 public interface FoodTripleMapper {

@@ -1,7 +1,9 @@
+
 package team.g3.delicacysearch.Service;
 
 import team.g3.delicacysearch.dao.FoodTripleMapper;
 import team.g3.delicacysearch.model.FoodTriple;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,6 @@
+
 package team.g3.delicacysearch.model;
+
 
 import java.io.Serializable;
 

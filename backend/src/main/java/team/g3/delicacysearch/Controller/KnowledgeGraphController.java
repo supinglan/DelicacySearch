@@ -1,7 +1,9 @@
+
 package team.g3.delicacysearch.Controller;
 
 import team.g3.delicacysearch.Service.KnowledgeGraphService;
 import team.g3.delicacysearch.model.FoodTriple;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,5 @@
 package team.g3.delicacysearch.Service;
 
-
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;

@@ -30,9 +30,6 @@ public class ESqueryController {
     private StepsSearchService stepsSearchService;
     @Autowired
     private RecommendService recommendService;
-
-
-
     @RequestMapping(value = "/elastic", method = RequestMethod.POST)
     public ArrayList<Script> search_all(String SearchText,String username) throws IOException {
         System.out.println("SearchText"+SearchText);
@@ -98,5 +95,4 @@ public class ESqueryController {
     public ArrayList<Script> steps(String SearchText) throws IOException {
         return stepsSearchService.executeSearchQuery(SearchText);
     }
-
 }

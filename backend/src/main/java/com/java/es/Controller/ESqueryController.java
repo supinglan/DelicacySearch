@@ -2,18 +2,7 @@ package com.java.es.Controller;
 
 
 import com.java.es.Service.ESqueryService;
-import com.java.es.Service.IngredientSearchService;
-import com.java.es.Service.StepsSearchService;
 import com.java.es.pojo.Script;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
@@ -32,10 +20,7 @@ public class ESqueryController {
 
     @Autowired
     private ESqueryService squeryService;
-    @Autowired
-    private IngredientSearchService ingredientSearchService;
-    @Autowired
-    private StepsSearchService stepsSearchService;
+
 
 
 //    @RequestMapping(value = "/elastic", method = RequestMethod.POST)
@@ -64,44 +49,44 @@ public class ESqueryController {
 
     //点击量排序
     @RequestMapping(value = "/clickSort", method = RequestMethod.POST)
-    public ArrayList<Script> clickSort(String SearchText) throws IOException {
-        return squeryService.searchByClick(SearchText);
+    public ArrayList<Script> clickSort(String SearchText, Integer type) throws IOException {
+        return squeryService.searchByClick(SearchText, type);
     }
 
 
     //综合排序
     @RequestMapping(value = "/combinedRank", method = RequestMethod.POST)
-    public ArrayList<Script> combinedRank(String SearchText) throws IOException {
-        return squeryService.searchByAll(SearchText);
+    public ArrayList<Script> combinedRank(String SearchText, Integer type) throws IOException {
+        return squeryService.searchByAll(SearchText, type);
     }
 
     //筛选标签
     @RequestMapping(value = "/elastic", method = RequestMethod.POST)
-    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category) throws IOException {
+    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category, Integer type) throws IOException {
         ArrayList<Integer> ints = new ArrayList<>();
         ints.add(Method);
         ints.add(Taste);
         ints.add(Scene);
         ints.add(Category);
-        return squeryService.searchByTags(SearchText, ints);
+        return squeryService.searchByTags(SearchText, ints, type);
     }
 
     //食材搜索
     @RequestMapping(value = "/ingredients", method = RequestMethod.POST)
     public ArrayList<Script> ingredients(String SearchText) throws IOException {
-        return ingredientSearchService.executeSearchQuery(SearchText);
+        return squeryService.executeSearchQuery(SearchText, 1);
     }
 
     //步骤搜索
     @RequestMapping(value = "/steps", method = RequestMethod.POST)
     public ArrayList<Script> steps(String SearchText) throws IOException {
-        return stepsSearchService.executeSearchQuery(SearchText);
+        return squeryService.executeSearchQuery(SearchText,2);
     }
 
     //相关搜索
     @RequestMapping(value = "/related", method = RequestMethod.POST)
     public ArrayList<String> ralevants(String SearchText) throws IOException {
-        ArrayList<Script> res = squeryService.executeSearchQuery(squeryService.executeSearchQuery(SearchText).get(0).getTitle());
+        ArrayList<Script> res = squeryService.executeSearchQuery(squeryService.executeSearchQuery(SearchText, 0).get(0).getTitle(), 0);
         ArrayList<String> RESULT = new ArrayList<>();
         for(int i = 0; i<10; i++)
         {

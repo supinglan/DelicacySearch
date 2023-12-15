@@ -34,7 +34,7 @@ public class testUtil {
     public static void CreateIndex () throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")));
+                        new HttpHost("120.55.14.3", 9200, "http")));
         int num = 300000;
         ArrayList<String> categories = new ArrayList<>();
         HashSet<String> finalURLs = new HashSet<>();

@@ -85,16 +85,20 @@ export default {
     components: { SearchZone, AIQA },
     methods: {
         async GetHotKeywords() {
+            
             await axios.post("http://localhost:8088/hot")
                 .then(response => {
                     this.hotKeyWords = []
-                    i = 1
+                    let i = 1
                     response.data.forEach(element => {
                         this.hotKeyWords.push({ id: i, title: element })
                         i++
                     });
                 })
         }
+    },
+    mounted(){
+        this.GetHotKeywords()
     }
 } 
 

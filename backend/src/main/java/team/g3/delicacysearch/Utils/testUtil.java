@@ -39,7 +39,7 @@ public class testUtil {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
-        int num = 114514;
+        int num = 300000;
         ArrayList<String> categories = new ArrayList<>();
         HashSet<String> finalURLs = new HashSet<>();
         try {

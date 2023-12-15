@@ -53,6 +53,7 @@
             <Selection :updateSelect="this.updateSelect"></Selection>
           </el-collapse-item>
         </el-collapse>
+        <AIQA style="height: 500px; width:600px"/>
           <li
             class="result-content"
             v-for="searchResult in searchResults"
@@ -85,9 +86,9 @@
           </li>
 
         </ul>
-  
         <!-- 相关搜索 -->
         <ul class="search-ranking">
+          
 
           <div class="title">
             <i class="el-icon-search"></i>
@@ -124,12 +125,12 @@
             <li><span>9</span><a href="javascript:;">豆腐</a></li> 
             <li><span>10</span><a href="javascript:;">面食</a></li> 
           </div>
-          
         </div>
+        
+        
         </ul>
 
       </div>
-
       <!-- 最底部 -->
       <div class="bottom-bar">
         <!-- 底部翻页栏 -->
@@ -180,6 +181,7 @@
   <script>
 import SearchZone from './SearchZone.vue';
 import Selection from './Selection.vue';
+import AIQA from './AIQA.vue';
 import axios from 'axios';
 export default {
     data () {
@@ -207,66 +209,11 @@ export default {
           searchContent: ''
         },
       searchResults: [
-        {
-          id:1,
-          title:"青柠红茶巴斯克",
-          abstracts:"像春天一样的小清新，青柠与红茶的双重口感,你只需要一只蜜桃，几片薄荷，半杯苏打水。不落俗套的少女心，都在这一杯蜜桃莫吉托里了",
-          imgURL:"https://tse3-mm.cn.bing.net/th/id/OIP-C.vE-mMltbF0REfrlazDXSGQHaJ4?w=140&h=186&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/107106680/"
-        },
-        {
-          id:2,
-          title:"蜜桃莫吉托｜Peach Mojito",
-          abstracts:"你只需要一只蜜桃，几片薄荷，半杯苏打水。不落俗套的少女心，都在这一杯蜜桃莫吉托里了！",
-          imgURL:"https://tse3-mm.cn.bing.net/th/id/OIP-C.w_46wdfSgtqW04jA5rkCDAHaE8?w=253&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/101894403/"
-        },
-        {
-          id:3,
-          title:"蔓越莓坚果风味藜麦沙拉Cranberry Quinoa Salad ",
-          abstracts:"这道菜色彩明快，口感上层次丰富，竟能吃出肉味来，是brunch的保留菜式。该菜成品为两人份量。用量参考改编自厨师Juan-Carlos Cruz菜谱",
-          imgURL:"https://tse2-mm.cn.bing.net/th/id/OIP-C.AiOZF9vQ8Gh9Pnq7EtwchAHaE8?w=277&h=185&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/107106680/"
-        },
-        {
-          id:4,
-          title:"青柠/青桔百香果气泡水/夏日必备",
-          abstracts:"夏天就要喝透心凉的饮料！酸酸的百香果和青柠，揉入甜甜的雪碧和苏打水，碰撞出绝美的火花！",
-          imgURL:"https://tse2-mm.cn.bing.net/th/id/OIP-C.lr0WAejAR-7OIOMB5vK74gHaE7?w=272&h=181&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/100285676/"
-        },
-        {
-          id:5,
-          title:"青柠香菜虾仁",
-          abstracts:"这是一道能改变你对香菜态度的神奇的菜肴。青柠，香菜和虾仁三个听上去并不搭调的食材组合起来却异常和谐。青柠的酸和清香，虾仁的鲜，和香菜独特的香味完美结合",
-          imgURL:"https://tse4-mm.cn.bing.net/th/id/OIP-C.pJaEByHjUcPJJUHj6dbFfgHaE6?w=282&h=187&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/100546155/"
-        },
-        {
-          id:6,
-          title:"百香果青柠鸡脚",
-          abstracts:"这是一道能改变你对香菜态度的神奇的菜肴。青柠，香菜和虾仁三个听上去并不搭调的食材组合起来却异常和谐。青柠的酸和清香，虾仁的鲜，和香菜独特的香味完美结合",
-          imgURL:"https://tse4-mm.cn.bing.net/th/id/OIP-C.63khk0VdnVzZc5rUXQDHLgHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/102321347/"
-        },
-        {
-          id:7,
-          title:"青柠茉莉茶",
-          abstracts:"茉莉花茶是略微有一点点苦涩的，冰镇以后苦味会降低一些，夏天喝非常消暑。建议读完贴士再做",
-          imgURL:"https://tse4-mm.cn.bing.net/th/id/OIP-C.5doZJlz6ract52GiJXWQUQHaF7?w=211&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/105637327/"
-        },
-        {
-          id:8,
-          title:"简单易做的爽口泰式青柠鱼",
-          abstracts:"爱吃泰餐里的青柠鱼，总想挑战一下自己的厨艺，结合下厨房里前辈们的几个菜谱，终于下定决心买齐了几种必须的原材料，试做一把，一次成功",
-          imgURL:"https://tse4-mm.cn.bing.net/th/id/OIP-C.ELPodeFp7bnSeRqNMN4-hAHaEK?w=253&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-          url:"https://www.xiachufang.com/recipe/104677382/"
-        },
+        
       ]
       }
     },
-    components: { SearchZone,Selection },
+    components: { SearchZone,Selection,AIQA },
   
     methods: {
     onConfirm() {

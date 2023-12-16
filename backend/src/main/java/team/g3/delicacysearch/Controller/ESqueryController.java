@@ -22,8 +22,13 @@ public class ESqueryController {
     private ESqueryService squeryService;
     @Autowired
     private RecommendService recommendService;
+
+
+    //searchtext:搜索内容
+    //type：按照何种方式搜索（食材、steps）
+    //sortType：按照何种方式排序（按clicks、score、综合排序）
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category, Integer type,String username) throws IOException {
+    public ArrayList<Script> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category, Integer type, Integer sortType,String username) throws IOException {
         if(username!=null){
             recommendService.updateSearchHistory(username, SearchText);}
         else{
@@ -34,7 +39,7 @@ public class ESqueryController {
         ints.add(Taste);
         ints.add(Scene);
         ints.add(Category);
-        return squeryService.searchByTags(SearchText, ints, type);
+        return squeryService.searchByTags(SearchText, ints, type, sortType);
     }
 
     @RequestMapping(value = "/autofill", method = RequestMethod.POST)
@@ -53,18 +58,6 @@ public class ESqueryController {
             result = new ArrayList<>(result.subList(0, 9));
         }
         return result;
-    }
-
-    //点击量排序
-    @RequestMapping(value = "/clickSort", method = RequestMethod.POST)
-    public ArrayList<Script> clickSort(String SearchText, Integer type) throws IOException {
-        return squeryService.searchByClick(SearchText, type);
-    }
-
-    //综合排序
-    @RequestMapping(value = "/combinedRank", method = RequestMethod.POST)
-    public ArrayList<Script> combinedRank(String SearchText, Integer type) throws IOException {
-        return squeryService.searchByAll(SearchText, type);
     }
 
 }

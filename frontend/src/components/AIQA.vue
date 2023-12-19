@@ -1,12 +1,24 @@
 <template>
+<<<<<<< HEAD
     <div class="box" style="width: 100%; height: 100%;background-color: white;">
         <div style="font-weight: bold; font-size: 30px; padding-top: 15px;">AI问答</div>
         <div class="chat-content" id="chat" ref="mainScroll" style=" min-height: 90%;max-height: 90%; width: 100%;overflow-y: scroll;">
+=======
+    <div class="box" style="width: 100%; height: 100%;background-color: white; text-align: center;">
+        <div style="font-weight: bold; font-size: 30px; padding-top: 15px; margin:0 auto">AI问答</div>
+        <div class="chat-content" id="chat" ref="mainScroll" style=" min-height: 70%;max-height: 70%; width: 100%;overflow-y: scroll;">
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
             <!-- recordContent 聊天记录数组-->
             <div v-for="item in messages.slice(1)">
                 <!-- 对方 -->
                 <div class="word" v-if="item.role == 'assistant'">
+<<<<<<< HEAD
                     <img src="../views/logo.png">
+=======
+                    <img src="../views/logo.png" style=" width: 40px;
+            height: 40px;
+            border-radius: 50%;">
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
                     <div class="info">
                         <p class="time">食香传世AI</p>
                         <div class="info-content">{{ item.content }}</div>
@@ -18,7 +30,13 @@
                         <p class="time">我</p>
                         <div class="info-content">{{ item.content }}</div>
                     </div>
+<<<<<<< HEAD
                     <img src="../views/user.png">
+=======
+                    <img src="../views/user.png" style=" width: 40px;
+            height: 40px;
+            border-radius: 50%; padding-right: 30px;">
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
                 </div>
             <div id="chat_end" style="height: 1px; width: 1px;"></div>
             </div>
@@ -55,8 +73,15 @@ export default {
             const config = { headers: { 'Content-Type': 'application/json' } };
 
             this.messages.push({ "role": "user", "content": this.content })
+<<<<<<< HEAD
             // document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
             document.getElementById('chat').scrollIntoView(0,document.getElementById('chat').scrollHeight)
+=======
+            let scrollingDiv = document.getElementById('chat');  
+                    scrollingDiv.scrollTop = scrollingDiv.scrollHeight; 
+            // document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
+            // document.getElementById('chat').scrollIntoView(0,document.getElementById('chat').scrollHeight)
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
             // this.$refs.mainScroll.scrollTo({top:this.$refs.scrollHeight, behavior:'smooth'})
             this.content = ""
             let payload = {
@@ -70,9 +95,17 @@ export default {
                 .then(response => {
                     console.log(response)
                     this.messages.push({ "role": "assistant", "content": response.data.result })
+<<<<<<< HEAD
                     document.getElementById('chat').scrollIntoView(0,document.getElementById('chat').scrollHeight)
                     // this.$refs.mainScroll.scrollTo({top:this.$refs.scrollHeight, behavior:'smooth'})
                     // document.querySelector('#chat_end').scrollIntoView({behavior:'smooth'})
+=======
+                    // document.getElementById('chat').scrollIntoView(0,document.getElementById('chat').scrollHeight)
+                    // this.$refs.mainScroll.scrollTo({top:this.$refs.scrollHeight, behavior:'smooth'})
+                    // document.querySelector('#chat_end').scrollIntoView({behavior:'smooth'})
+
+                    
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
                     // document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
                 })
                 .catch(error => {
@@ -102,6 +135,13 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+<<<<<<< HEAD
+=======
+    },
+    updated(){
+        let scrollingDiv = document.getElementById('chat');  
+                    scrollingDiv.scrollTop = scrollingDiv.scrollHeight;  
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
     }
 }
 </script>
@@ -109,13 +149,18 @@ export default {
 <style>
 .box{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+<<<<<<< HEAD
     text-align: center;
+=======
+    
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
 }
 .chat-content {
     width: 100%;
     padding: 20px;
    
 
+<<<<<<< HEAD
     .word {
         display: flex;
         margin-bottom: 20px;
@@ -126,6 +171,14 @@ export default {
             border-radius: 50%;
         }
 
+=======
+    
+}
+.word {
+        display: flex;
+        margin-bottom: 20px;
+
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
         .info {
             margin-left: 10px;
             max-width: 70%;
@@ -167,6 +220,7 @@ export default {
         justify-content: flex-end;
         margin-bottom: 20px;
 
+<<<<<<< HEAD
         img {
             width: 40px;
             height: 40px;
@@ -174,6 +228,8 @@ export default {
             padding-right: 30px;
         }
 
+=======
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
         .info {
             width: 90%;
             margin-left: 10px;
@@ -212,8 +268,17 @@ export default {
             }
         }
     }
+<<<<<<< HEAD
 }
 .chat-content::-webkit-scrollbar {
     display: none;
   }
+=======
+.chat-content::-webkit-scrollbar {
+    display: none;
+  }
+  
+
+
+>>>>>>> 51ce9adb4241f14c18ecd2bfe18ca588c464eec5
 </style>

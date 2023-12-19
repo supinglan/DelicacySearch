@@ -30,10 +30,12 @@
   <el-form-item label="密码">
     <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
   </el-form-item>
-  <el-link type="primary" @click="registerFormVisible = true;">没有账户？点击注册</el-link>
+  <el-form-item>
+      <el-link type="primary" @click="registerFormVisible = true;">没有账户？点击注册</el-link>
+  </el-form-item>
   <el-form-item>
   
-    <el-button style="margin-top: 30px;" type="primary" @click="Login" >确认</el-button>
+    <el-button type="primary" @click="Login" >确认</el-button>
     <el-button style="margin-right: 100px;" @click="loginFormVisible = false">取消</el-button>
   </el-form-item>
 </el-form>
@@ -127,15 +129,25 @@ import axios from 'axios';
       //   para.append("password",this.loginForm.password);
       //   await axios.post('http://localhost:8088/user/login',para)
       // .then(response=>{
-      //   if(response.data.success){
+      //   if(response.message=="密码错误"){
       //     this.$message({
-      //       type: 'success',
-      //       message: '登录成功!'
+      //       type: 'error',
+      //       message: '密码错误！'
+      //     });
+      //   }else if(response.message=="用户不存在"){
+      //     this.$message({
+      //       type: 'error',
+      //       message: '用户不存在!'
+      //     });
+      //   }else if(response.message=="登陆成功"){
+      //       this.$message({
+      //          type: 'success',
+      //          message: '登陆成功'
       //     });
       //   }else{
       //     this.$message({
-      //       type: 'error',
-      //       message: '登陆失败!'
+      //          type: 'error',
+      //          message: '出错啦'
       //     });
       //   }
         
@@ -153,15 +165,20 @@ import axios from 'axios';
       //   para.append("email",this.registerForm.email)
       //   await axios.post('http://localhost:8088/user/register',para)
       // .then(response=>{
-      //   if(response.data.success){
+      //   if(response.message == "注册成功"){
       //     this.$message({
       //       type: 'success',
       //       message: '注册成功!'
       //     });
-      //   }else{
+      //   }else if(response.message == "电子邮箱已被注册"){
       //     this.$message({
       //       type: 'error',
-      //       message: '注册失败!'
+      //       message: '电子邮箱已被注册，注册失败!'
+      //     });
+      //   }else if(response.message == "用户名已被注册"){
+      //     this.$message({
+      //       type: 'error',
+      //       message: '用户名已被注册，注册失败!'
       //     });
       //   }
         
@@ -172,8 +189,3 @@ import axios from 'axios';
   }
 </script>
 
-<style>
-
-.el-link{
-  margin-left: 50%;
-}

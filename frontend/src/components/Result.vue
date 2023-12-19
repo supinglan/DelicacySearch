@@ -96,7 +96,7 @@
 
         <div class="title">
           <i class="el-icon-search"></i>
-          <span>相关搜索</span>
+          <span>猜你喜欢</span>
         </div>
         <div class="set">
         <li class="item">

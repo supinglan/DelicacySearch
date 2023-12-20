@@ -37,5 +37,4 @@ public class KnowledgeGraph {
         this.lines = lines;
     }
 
-
 }

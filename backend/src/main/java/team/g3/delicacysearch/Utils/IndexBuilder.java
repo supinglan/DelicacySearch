@@ -200,8 +200,8 @@ public class IndexBuilder {
                 Integer click =  random.nextInt(max - min + 1) + min;
                 //放入索引
                 Script script = new Script(pict_url, html_url, text_title, Abstract, ingredient, steps, source, tags, click, 0);
-                IndexRequest request1 = new IndexRequest("script_test");
-                request1.id(Integer.toString(t));
+                IndexRequest request1 = new IndexRequest("script_index");
+                request1.id(Integer.toString(num));
                 request1.timeout(TimeValue.timeValueSeconds(1));
                 request1.timeout("1s");
                 request1.source(JSON.toJSONString(script), XContentType.JSON);
@@ -209,6 +209,8 @@ public class IndexBuilder {
                 System.out.println(indexResponse.toString());
 
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
+                IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
+                request3.id(Integer.toString(num++)); // 设置文档ID
                 IndexRequest request3 = new IndexRequest("pinyin_test");
                 request3.id(Integer.toString(t)); // 设置文档ID
                 request3.source(documents1, XContentType.JSON);

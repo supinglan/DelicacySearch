@@ -1,4 +1,4 @@
-package com.java.es.pojo;
+package team.g3.delicacysearch.pojo;
 
 
 import lombok.AllArgsConstructor;
@@ -20,4 +20,16 @@ public class Script {
      ArrayList<String> ingredient;
      ArrayList<String> steps;
      String origin;
+     ArrayList<String> tag;
+     Integer clicks;
+     float score;
+
+     public Integer getClicks()
+     {
+          return clicks;
+     }
+
+     public float getScore() {
+          return score;
+     }
 }

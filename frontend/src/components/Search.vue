@@ -3,54 +3,60 @@
         <div style="width: 40%; min-width: 500px;margin: 50% auto; margin-top:25vh">
             <img src="../views/logo_full.png" style="width: 70%; ">
             <SearchZone style="margin-top: 2.5vh;" />
-            <div style="margin-top: 20px; padding-bottom: 40px; background-color: rgba(255,255,255,0.3); border-radius: 30px;">
-                <div
-                    style="font-weight: bold; color: #fff;  font-size: 25px; padding: 10px; margin-left: 20px;">
+
+            <div
+                style="margin-top: 20px; padding-bottom: 40px; background-color: rgba(255,255,255,0.3); border-radius: 30px;">
+                <div style="font-weight: bold; color: #fff;  font-size: 25px; padding: 10px; margin-left: 20px;">
                     热门搜索</div>
                 <div style="">
                     <div style="display: inline-block; ">
-                    <div v-for="item in hotKeyWords" key="id" style="display: flex;">
+                        <div v-for="item in hotKeyWords" key="id" style="display: flex;">
                             <div v-show="item.id == 1" style="color: red; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
-                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                <router-link :to="'result/' + item.title"
+                                    style="text-decoration: none; margin-left: 10px; color: white; ">
                                     {{ item.title }}
                                 </router-link>
                             </div>
                             <div v-show="item.id == 2" style="color: orangered; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
-                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                <router-link :to="'result/' + item.title"
+                                    style="text-decoration: none; margin-left: 10px; color: white; ">
                                     {{ item.title }}
                                 </router-link>
                             </div>
                             <div v-show="item.id == 3" style="color: orange; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
-                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                <router-link :to="'result/' + item.title"
+                                    style="text-decoration: none; margin-left: 10px; color: white; ">
                                     {{ item.title }}
                                 </router-link>
                             </div>
                             <div v-show="item.id == 4" style="color: white; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
-                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                <router-link :to="'result/' + item.title"
+                                    style="text-decoration: none; margin-left: 10px; color: white; ">
                                     {{ item.title }}
                                 </router-link>
                             </div>
+                        </div>
                     </div>
-                </div>
-                <div style="display: inline-block; margin-left: 8vw;">
-                    <div v-for="item in hotKeyWords" key="id" style="display: flex;">
+                    <div style="display: inline-block; margin-left: 8vw;">
+                        <div v-for="item in hotKeyWords" key="id" style="display: flex;">
                             <div v-show="item.id > 4" style="color: white; margin-top: 5px; 
                                      font-size: large; margin-top: 15px;">
                                 <span style="font-weight: bold;">{{ item.id }}</span>
-                                <router-link :to="'result/' + item.title" style="text-decoration: none; margin-left: 10px; color: white; ">
+                                <router-link :to="'result/' + item.title"
+                                    style="text-decoration: none; margin-left: 10px; color: white; ">
                                     {{ item.title }}
                                 </router-link>
                             </div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -59,6 +65,7 @@
 
 <script>
 import SearchZone from './SearchZone.vue';
+import AIQA from './AIQA.vue';
 import axios from 'axios';
 export default {
     data: function () {
@@ -75,13 +82,25 @@ export default {
             ]
         }
     },
-    components: { SearchZone },
+    components: { SearchZone, AIQA },
     methods: {
-        GetHotKeywords() {
+        async GetHotKeywords() {
             
+            await axios.post("http://localhost:8088/hot")
+                .then(response => {
+                    this.hotKeyWords = []
+                    let i = 1
+                    response.data.forEach(element => {
+                        this.hotKeyWords.push({ id: i, title: element })
+                        i++
+                    });
+                })
         }
+    },
+    mounted(){
+        this.GetHotKeywords()
     }
-}
+} 
 
 </script>
 
@@ -96,5 +115,4 @@ export default {
     min-height: 100%;
     background: url("../views/Search_background.jpg") fixed no-repeat;
     background-size: cover;
-}
-</style>
+}</style>

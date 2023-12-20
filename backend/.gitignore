@@ -1,5 +1,5 @@
 # Maven
-target/
+target/*
 mvnw
 mvnw.cmd
 *.jar
@@ -8,6 +8,7 @@ mvnw.cmd
 *.zip
 *.tar.gz
 *.rar
+*.yml
 
 # Gradle
 build/

@@ -6,7 +6,7 @@ import router from './router';
       <router-link to="/result" style="margin-left: 50px;">RESULT</router-link>
       <router-link to="/detail" style="margin-left: 50px;">DETAIL</router-link>
     </div> -->
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

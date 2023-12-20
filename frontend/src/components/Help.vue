@@ -35,39 +35,18 @@
                             <div class="content">
                                 您可以在搜索框中输入想要搜索的关键词。<br />
                                 当您输入内容后，搜索框会自动检索相关数据，并生成智能补全建议。<br />
-                                <br/>
-                                
+                                <br />
+
                             </div>
                             <div class="title">关键词搜索</div>
                             <div class="content">这里是关键词搜索。</div>
-                            <RelationGraph root="鱼香肉丝" style="height: 90%;"/>
                         </el-tab-pane>
                         <el-tab-pane label="搜索结果处理">配置管理</el-tab-pane>
                         <el-tab-pane label="AI问答">角色管理</el-tab-pane>
                         <el-tab-pane label="知识图谱">定时任务补偿</el-tab-pane>
                     </el-tabs>
-                    <!-- <el-aside width="200px">
-                        
-                    </el-aside>
-                    <el-main>Main</el-main> -->
                 </el-container>
             </el-container>
-
-            <!-- <h1>This is Help Page.</h1>
-            
-        <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;">
-        <el-radio-button label="top">top</el-radio-button>
-        <el-radio-button label="right">right</el-radio-button>
-        <el-radio-button label="bottom">bottom</el-radio-button>
-        <el-radio-button label="left">left</el-radio-button>
-      </el-radio-group>
-    
-      <el-tabs :tab-position="tabPosition" style="height: 200px;">
-        <el-tab-pane label="用户管理">用户管理</el-tab-pane>
-        <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-        <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-      </el-tabs> -->
         </div>
 
     </div>
@@ -119,5 +98,4 @@ html {
 .pane::-webkit-scrollbar {
     display: none;
 }
-
 </style>

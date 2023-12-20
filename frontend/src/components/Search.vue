@@ -85,7 +85,6 @@ export default {
     components: { SearchZone, AIQA },
     methods: {
         async GetHotKeywords() {
-            
             await axios.post("http://localhost:8088/hot")
                 .then(response => {
                     this.hotKeyWords = []

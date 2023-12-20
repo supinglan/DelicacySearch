@@ -2,16 +2,15 @@
 package team.g3.delicacysearch.Controller;
 
 import team.g3.delicacysearch.Service.KnowledgeGraphService;
-import team.g3.delicacysearch.model.FoodTriple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import team.g3.delicacysearch.model.KnowledgeGraph;
 
 import java.io.IOException;
-import java.util.List;
 
 
 @RestController
@@ -19,10 +18,10 @@ import java.util.List;
 public class KnowledgeGraphController {
     @Autowired
     private KnowledgeGraphService knowledgeGraphService;
-    @RequestMapping(value = "/getKnowledgeGraph", method = RequestMethod.POST)
-    public List<FoodTriple> getKnowledgeGraph(String SearchText) throws IOException {
-        System.out.println(SearchText);
+    @RequestMapping(value = "/getKG", method = RequestMethod.POST)
+    public KnowledgeGraph getKnowledgeGraph(String rootText) throws IOException {
+        System.out.println(rootText);
         System.out.println("kd");
-        return knowledgeGraphService.getKnowledgeGraph(SearchText);
+        return knowledgeGraphService.getKnowledgeGraph(rootText);
     }
 }

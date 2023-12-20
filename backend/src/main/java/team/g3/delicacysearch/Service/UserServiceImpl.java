@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
         } else {
             result.put("message", "密码错误");
         }
+        result.put("message", "登录成功");
         return result;
     }
 
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setName(username);
         user.setPassword(password);
         userDao.insert(user);
+        result.put("message", "注册成功");
         return result;
     }
 }

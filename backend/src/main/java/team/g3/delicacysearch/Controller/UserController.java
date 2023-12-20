@@ -14,7 +14,6 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String,Object> login(String username, String password) {
-
         return userService.login(username, password);
     }
     @RequestMapping(value = "/register", method = RequestMethod.POST)

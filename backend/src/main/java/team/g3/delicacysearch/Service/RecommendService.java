@@ -81,7 +81,7 @@ public class RecommendService
                 list.add(0);
                 list.add(0);
                 list.add(0);
-                ArrayList<Script> scripts=  squeryService.searchByTags(keyword, list,0,0);
+    ArrayList<Script> scripts=  squeryService.search(keyword, list,0,0);
                 int i= 0;
                 for (Script script : scripts) {
                     String title = script.getTitle();
@@ -133,7 +133,8 @@ public class RecommendService
                 list.add(0);
                 list.add(0);
                 list.add(0);
-                ArrayList<Script> scripts=  squeryService.searchByTags(keyword, list,0,0);
+
+                ArrayList<Script> scripts=  squeryService.search(keyword, list,0,0);
                 int i= 0;
                 for (Script script : scripts) {
                     String title = script.getTitle();

@@ -7,6 +7,8 @@ import team.g3.delicacysearch.model.FoodTriple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.g3.delicacysearch.model.KnowledgeGraph;
+import team.g3.delicacysearch.model.Line;
+import team.g3.delicacysearch.model.Node;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,30 +20,30 @@ public class KnowledgeGraphService {
     private ESqueryService squeryService;
     @Autowired
     private FoodTripleMapper foodTripleMapper;
-    public List<FoodTriple> getKnowledgeGraph(String searchText) throws IOException {
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        String cuisine = squeryService.executeSearchQuery(searchText,0).get(0).getTitle();
-        List<String> cuisines = new ArrayList<>();
-        cuisines.add(cuisine);
-        List<String> ingredients = new ArrayList<>();
-        List<FoodTriple> first = foodTripleMapper.selectBySource(cuisine);
-        //将first的所有内容加入result中
-        List<FoodTriple> result = new ArrayList<>(first);
+
+    static int stop_num=20;
+    public KnowledgeGraph getKnowledgeGraph(String searchText) throws IOException {
+        List<Node> nodes = new ArrayList<>();
+        List<Line> lines = new ArrayList<>();
+        List<FoodTriple> first = foodTripleMapper.selectBySource(searchText);
+        nodes.add(new Node(searchText, searchText,"#38419D"));
+
         for (FoodTriple foodTriple : first) {
+            System.out.println(foodTriple.getTarget());
             List<FoodTriple> second = foodTripleMapper.selectByTarget(foodTriple.getTarget());
-            ingredients.add(foodTriple.getTarget());
-            //将second中不在result中的内容加入result中
+            if(second.size()>stop_num) continue;
+            lines.add(new Line(searchText,foodTriple.getTarget()));
+            nodes.add(new Node(foodTriple.getTarget(),foodTriple.getTarget(),"#52D3D8"));
+            int i=0;
             for (FoodTriple foodTriple1 : second) {
-                if (!result.contains(foodTriple1)) {
-                    result.add(foodTriple1);
-                    cuisines.add(foodTriple1.getSource());
-                }
+                if(foodTriple1.getSource().equals(searchText)) continue;
+                nodes.add(new Node(foodTriple1.getSource(), foodTriple1.getSource(), "#3887BE"));
+                lines.add(new Line(foodTriple1.getSource(), foodTriple1.getTarget()));
+                i++;
+                if(i>3) break;
             }
         }
-        return new KnowledgeGraph(cuisines, ingredients, result);
+        System.out.println(nodes.size());
+        return new KnowledgeGraph(searchText,nodes,lines);
     }
 }

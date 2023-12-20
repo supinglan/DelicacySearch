@@ -39,7 +39,7 @@ public class testUtil {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
-        int num = 300000;
+        int num = 200001;
         ArrayList<String> categories = new ArrayList<>();
         HashSet<String> finalURLs = new HashSet<>();
         try {
@@ -121,7 +121,7 @@ public class testUtil {
                                     int max = 500;
                                     Integer click =  random.nextInt(max - min + 1) + min;
 
-                                    Script script = new Script(pict_url, html_url, text_title, Abstract, ingredients, steps, source, tags, click, 0);
+                                    Script script = new Script(num, pict_url, html_url, text_title, Abstract, ingredients, steps, source, tags, click, 0);
                                     IndexRequest request1 = new IndexRequest("script_index");
                                     request1.id(Integer.toString(num));
                                     request1.timeout(TimeValue.timeValueSeconds(1));

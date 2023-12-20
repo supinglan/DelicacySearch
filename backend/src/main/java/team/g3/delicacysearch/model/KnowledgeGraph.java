@@ -3,38 +3,38 @@ package team.g3.delicacysearch.model;
 import java.util.List;
 
 public class KnowledgeGraph {
-    private List<String> cuisines;
-    private List<String> ingredients;
+    private String rootId;
+    private List<Node> nodes;
+    private List<Line> lines;
 
-    private List<FoodTriple> lines;
-
-    public KnowledgeGraph(List<String> cuisines, List<String> ingredients, List<FoodTriple> lines) {
-        this.cuisines = cuisines;
-        this.ingredients = ingredients;
+    public KnowledgeGraph(String root, List<Node> nodes, List<Line> lines) {
+        this.rootId = root;
+        this.nodes = nodes;
         this.lines = lines;
     }
 
-    public List<String> getCuisines() {
-        return cuisines;
+    public String getRootId() {
+        return rootId;
     }
 
-    public void setCuisines(List<String> cuisines) {
-        this.cuisines = cuisines;
+    public void setRootId(String root) {
+        this.rootId = root;
     }
 
-    public List<String> getIngredients() {
-        return ingredients;
+    public List<Node> getNodes() {
+        return nodes;
     }
 
-    public void setIngredients(List<String> ingredients) {
-        this.ingredients = ingredients;
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
     }
 
-    public List<FoodTriple> getLines() {
+    public List<Line> getLines() {
         return lines;
     }
 
-    public void setLines(List<FoodTriple> lines) {
+    public void setLines(List<Line> lines) {
         this.lines = lines;
     }
+
 }

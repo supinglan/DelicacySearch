@@ -1,12 +1,6 @@
 package team.g3.delicacysearch.Utils;
 
 import com.alibaba.fastjson.JSON;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import team.g3.delicacysearch.dao.FoodTripleMapper;
-import team.g3.delicacysearch.model.FoodTriple;
-import team.g3.delicacysearch.pojo.Script;
-
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -18,13 +12,19 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import team.g3.delicacysearch.dao.FoodTripleMapper;
+import team.g3.delicacysearch.model.FoodTriple;
+import team.g3.delicacysearch.pojo.Script;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ import java.util.Random;
 @Component
 public class IndexBuilder {
     @Autowired
-    static FoodTripleMapper foodTripleMapper;
-    public static void main(String[] Args) throws Exception {
+    FoodTripleMapper foodTripleMapper;
+    public void buildIndex() throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
@@ -198,7 +198,7 @@ public class IndexBuilder {
                 int max = 500;
                 Integer click =  random.nextInt(max - min + 1) + min;
                 //放入索引
-                Script script = new Script(pict_url, html_url, text_title, Abstract, ingredient, steps, source, tags, click, 0);
+                Script script = new Script(num, pict_url, html_url, text_title, Abstract, ingredient, steps, source, tags, click, 0);
                 IndexRequest request1 = new IndexRequest("script_index");
                 request1.id(Integer.toString(num));
                 request1.timeout(TimeValue.timeValueSeconds(1));
@@ -213,11 +213,14 @@ public class IndexBuilder {
                 request3.source(documents1, XContentType.JSON);
                 IndexResponse indexResponse4 = restHighLevelClient.index(request3, RequestOptions.DEFAULT);
                 if(num>200000) break;
+
+
+            } catch (HttpStatusException e){
+                e.printStackTrace();
+
             }
             catch (Exception e) {
-                // 处理HTTP状态异常
-                System.out.println("异常");
-
+                e.printStackTrace();
             }
         }
         System.out.println("索引创建完成！");

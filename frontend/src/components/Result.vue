@@ -440,7 +440,6 @@ created(){
   height:2px;
   color:#000;
 }
-
 .el-row {
     margin: 0px 0 15px 10px;
   }
@@ -721,7 +720,6 @@ a:hover {
   margin-top: 8px;
   margin-bottom: 8px;
   margin-right: 10px;
-  
 }
 
 .main-wrapper .search-ranking .el-image{

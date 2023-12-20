@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Serach from '../components/Search.vue'
 import Result from '../components/Result.vue'
 import Detail from '../components/Detail.vue'
+import Help from '@/components/Help.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     name: 'result',
     component: Result
   },
+  {
+    path: '/help',
+    name: 'help',
+    component: Help
+  }
   
 ]
 

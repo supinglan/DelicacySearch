@@ -26,6 +26,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.xml.ws.http.HTTPException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,8 +35,8 @@ import java.util.Random;
 @Component
 public class IndexBuilder {
     @Autowired
-    static FoodTripleMapper foodTripleMapper;
-    public static void main(String[] Args) throws Exception {
+    FoodTripleMapper foodTripleMapper;
+    public void buildIndex() throws Exception {
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
@@ -49,7 +50,7 @@ public class IndexBuilder {
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             System.out.println("索引已存在并已删除：" + "script_index");
         } else {
-            System.out.println("索引不存在：" + "script_index");
+            System.out.println("索引不存在：" + "script_test");
         }
         XContentBuilder mapping = XContentFactory.jsonBuilder();
         mapping.startObject();
@@ -122,7 +123,7 @@ public class IndexBuilder {
 
 
         //下厨房
-        testUtil.CreateIndex ();
+//        testUtil.CreateIndex ();
 
 
         //美食天下
@@ -210,14 +211,18 @@ public class IndexBuilder {
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
                 IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
                 request3.id(Integer.toString(num++)); // 设置文档ID
+                IndexRequest request3 = new IndexRequest("pinyin_test");
+                request3.id(Integer.toString(t)); // 设置文档ID
                 request3.source(documents1, XContentType.JSON);
                 IndexResponse indexResponse4 = restHighLevelClient.index(request3, RequestOptions.DEFAULT);
                 if(num>200000) break;
             }
-            catch (Exception e) {
+            catch (HTTPException e) {
                 // 处理HTTP状态异常
                 System.out.println("异常");
-
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
         }
         System.out.println("索引创建完成！");

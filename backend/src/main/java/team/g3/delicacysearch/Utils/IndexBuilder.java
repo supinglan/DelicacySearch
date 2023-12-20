@@ -209,8 +209,6 @@ public class IndexBuilder {
                 System.out.println(indexResponse.toString());
 
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
-                IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
-                request3.id(Integer.toString(num++)); // 设置文档ID
                 IndexRequest request3 = new IndexRequest("pinyin_test");
                 request3.id(Integer.toString(t)); // 设置文档ID
                 request3.source(documents1, XContentType.JSON);

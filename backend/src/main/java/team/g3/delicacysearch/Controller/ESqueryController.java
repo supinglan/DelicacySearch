@@ -39,7 +39,7 @@ public class ESqueryController {
         ints.add(Taste);
         ints.add(Scene);
         ints.add(Category);
-        return squeryService.searchByTags(SearchText, ints, type, sortType);
+        return squeryService.search(SearchText, ints, type, sortType);
     }
 
     @RequestMapping(value = "/autofill", method = RequestMethod.POST)

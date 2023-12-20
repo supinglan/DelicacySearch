@@ -100,8 +100,11 @@ public class ESqueryService {
         return total_res;
     }
 
+
+
+
     //按照标签搜索
-    public ArrayList<Script> searchByTags(String SearchText, ArrayList<Integer> searchOps, Integer type, Integer sortType) throws IOException {
+    public ArrayList<Script> search(String SearchText, ArrayList<Integer> searchOps, Integer type, Integer sortType) throws IOException {
         if (SearchText.toLowerCase().contains("or") || SearchText.contains("-") || SearchText.contains("*") || SearchText.matches(".*[\"“”].*"))
             return preProcess(SearchText, type, searchOps, sortType);
         //判断输入的搜索语句是否含有拼音
@@ -109,15 +112,10 @@ public class ESqueryService {
         //若包含。我们按照自动补全的函数，获取一系列的汉字String，再搜索这些汉字String
         if (containsLetter) {
             List<String> results = getNames(SearchText);
-            ArrayList<Script> total_results = new ArrayList<>();
-            for (String result : results) {
-                ArrayList<Script> part_results = searchByTags(result, searchOps, type, 0);
-                for (Script partResult : part_results) {
-                    if (!total_results.contains(partResult)) {
-                        total_results.add(partResult);
-                    }
-                }
-            }
+            String result = results.get(0);
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(0);list.add(0);list.add(0);list.add(0);
+            ArrayList<Script> total_results = search(result, list ,type, 0);
             switch (sortType) {
                 case 0:
                     return total_results;
@@ -141,6 +139,13 @@ public class ESqueryService {
                 return null;
         }
     }
+
+    public ArrayList<Script> search(String SearchText) throws IOException {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0);list.add(0);list.add(0);list.add(0);
+        return search(SearchText, list,0,0);
+    }
+
 
     //综合排序（相关度60% + 点击量40%）
     public ArrayList<Script> searchByAll(ArrayList<Script> results) throws IOException {

@@ -57,7 +57,7 @@
           <Selection :updateSelect="this.updateSelect"></Selection>
         </el-collapse-item>
       </el-collapse>
-      <AIQA style="height: 500px; width:600px"/>
+      <!-- <AIQA style="height: 500px; width:600px"/> -->
         <li
           class="result-content"
           v-for="searchResult in searchResults.slice(1+(currentPage-1)*8,currentPage*8)"
@@ -95,7 +95,7 @@
         <div class="title">
           <i class="el-icon-search"></i>
           <span>猜你喜欢</span>
-          <el-divider style="height:3px;"></el-divider>
+         
         </div>
         <div class="set">
         <li class="item" v-on:click="handleClick(Recommend[0])">
@@ -112,7 +112,7 @@
        <div class="title" style="margin-top: 50px; margin-bottom:20px ;">
         <i class="el-icon-caret-top"></i>
         <span>热门搜索</span>
-        <el-divider style="height: 1px;"></el-divider>
+        
       </div>
        
       <div class="set" >
@@ -224,22 +224,26 @@ export default {
   async updateRecommend(){
     await axios.get("http://localhost:8088/recommend")
     .then(response => {
+      console.log(response.data);
         this.Recommend = response.data;
+        
       }
     ).catch(error => {  
       console.error(error);  
     });
   },
   async Search(){
+  this.updateRecommend();
   const params = new URLSearchParams();  
   params.append('SearchText',this.$route.params.para);
   params.append('Method',this.Method);
   params.append('Taste',this.Taste);
   params.append('Scene',this.Scene);
   params.append('Category',this.Category);
-  params.append('Sort',this.Sort);
-  params.append('Type',this.Type);
-    await axios.post('http://localhost:8088/elastic',params)
+  params.append('sortType',this.Sort);
+  params.append('type',this.Type);
+  params.append('username',"spl");
+    await axios.post('http://localhost:8088/search',params)
     .then(response=>{
        this.searchResults=[]
        let i = 1
@@ -419,8 +423,9 @@ export default {
   }
 },
 created(){
-  this.Search();
   this.updateHot();
+  this.Search();
+  
 },
 
 }
@@ -433,12 +438,6 @@ created(){
   text-decoration: none;
   list-style: none;
   text-align: left;
-}
-.el-divider{
-  top:-25px;
-  width:350px;
-  height:2px;
-  color:#000;
 }
 
 .el-row {

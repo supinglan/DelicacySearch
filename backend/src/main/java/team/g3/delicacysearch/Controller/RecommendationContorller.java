@@ -15,7 +15,7 @@ public class RecommendationContorller {
     @Autowired
     private RecommendService recommendService;
     //相关搜索
-    @RequestMapping(value = "/recommend", method = RequestMethod.POST)
+    @RequestMapping(value = "/recommend", method = RequestMethod.GET)
     public List<String> recommend(String username) throws IOException {
         if(username!=null){
             return recommendService.getRecommend(username);}
@@ -25,7 +25,7 @@ public class RecommendationContorller {
     }
 
     //热搜
-    @RequestMapping(value = "/hot", method = RequestMethod.POST)
+        @RequestMapping(value = "/hot", method = RequestMethod.GET)
     public List<String> hot() throws IOException {
         return recommendService.getHot();
     }

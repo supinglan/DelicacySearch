@@ -174,6 +174,9 @@ public class IndexBuilder {
                 // 处理HTTP状态异常
                 System.out.println("异常");
             }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("索引创建完成！");
     }

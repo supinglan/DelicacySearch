@@ -52,7 +52,7 @@
       </div>
       <!-- 搜索结果 -->
       <ul class="results">
-        <el-collapse v-model="activeNames">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="自定义筛选" name="1">
           <Selection :updateSelect="this.updateSelect"></Selection>
         </el-collapse-item>
@@ -60,7 +60,7 @@
       <AIQA style="height: 500px; width:600px"/>
         <li
           class="result-content"
-          v-for="searchResult in searchResults"
+          v-for="searchResult in searchResults.slice(1+(currentPage-1)*8,currentPage*8)"
           :key="searchResult.id"
         >
           <!-- 如果返回的图片地址不为空，有图片盒子，文字盒子样式为des-text1 -->
@@ -72,7 +72,7 @@
                 </h3> 
                 <div class="des-text1">
                   <div class="van-multi-ellipsis--l2">
-                    {{ searchResult.abstracts }}
+                    {{searchResult.abstracts}}
                   </div> 
                 </div>
                 
@@ -92,39 +92,41 @@
       </ul>
       <!-- 相关搜索 -->
       <ul class="search-ranking">
-        
-
         <div class="title">
           <i class="el-icon-search"></i>
           <span>猜你喜欢</span>
+          <el-divider style="height:3px;"></el-divider>
         </div>
         <div class="set">
-        <li class="item">
-          <el-image :src="url1"></el-image>
-          <a  href="javascript:;" >百香果</a>
+        <li class="item" v-on:click="handleClick(Recommend[0])">
+          <a  style="font-weight: bold;" href="javascript:;">{{Recommend[0]}}</a>
         </li> 
-        <li class="item">
-          <el-image :src="url2"></el-image>
-          <a  href="javascript:;">柑橘</a>
+        <li class="item" v-on:click="handleClick(Recommend[1])">
+          <a  style="font-weight: bold;" href="javascript:;">{{Recommend[1]}}</a>
         </li> 
-        <li class="item">
-          <el-image :src="url3"></el-image>
-          <a  href="javascript:;">柠檬</a>
+        <li class="item" v-on:click="handleClick(Recommend[2])">
+          <a  style="font-weight: bold;" href="javascript:;">{{Recommend[2]}}</a>
         </li> 
         </div>
-       <div class="title"><i class="el-icon-caret-top"></i><span>热门搜索</span></div>
-      <div class="set">
-        <div>
+        
+       <div class="title" style="margin-top: 50px; margin-bottom:20px ;">
+        <i class="el-icon-caret-top"></i>
+        <span>热门搜索</span>
+        <el-divider style="height: 1px;"></el-divider>
+      </div>
+       
+      <div class="set" >
+        <div style="margin-left: 7%;">
           <li><span style="color:crimson">1</span><a href="javascript:;" v-on:click="handleClick(Hot[0])">{{Hot[0]}}</a></li> 
           <li><span style="color:chocolate">2</span><a href="javascript:;" v-on:click="handleClick(Hot[1])">{{Hot[1]}}</a></li> 
           <li><span style="color:gold">3</span><a href="javascript:;" v-on:click="handleClick(Hot[2])">{{Hot[2]}}</a></li> 
           <li><span>4</span><a href="javascript:;" v-on:click="handleClick(Hot[3])">{{Hot[3]}}</a></li> 
         </div>
         <div style="margin-left: 25%;">
-          <li><span>6</span><a href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
-          <li><span>7</span><a href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
-          <li><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
-          <li><span>9</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
+          <li><span>5</span><a href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
+          <li><span>6</span><a href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
+          <li><span>7</span><a href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
+          <li><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
         </div>
       </div>
       
@@ -139,7 +141,10 @@
           <el-pagination
             background
             layout="prev, pager, next"
-            :total="1000">
+            :total="searchResults.length"
+            :current-page="currentPage"
+            :page-size="8"
+            @current-change="handleCurrentChange">
           </el-pagination>
       </ul>
       <!-- 最底部功能栏 -->
@@ -160,8 +165,10 @@ import axios from 'axios';
 export default {
   data () {
     return {
+      currentPage:1,
       radio:"常规搜索",
       Hot:["家常菜","早餐","汤","排骨","白菜","鸡蛋","红豆","南瓜"],
+      Recommend:['百香果','柑橘','柠檬'],
       activeNames: [],
       Username:"Guest",
       Method:0,
@@ -201,10 +208,23 @@ export default {
   jump(url){
     window.location.href = url;
   },
+  handleCurrentChange(val){
+    this.currentPage = val;
+    console.log("current page:"+val);
+  },
   async updateHot(){
     await axios.get("http://localhost:8088/hot")
     .then(response => {
         this.Hot = response.data;
+      }
+    ).catch(error => {  
+      console.error(error);  
+    });
+  },
+  async updateRecommend(){
+    await axios.get("http://localhost:8088/recommend")
+    .then(response => {
+        this.Recommend = response.data;
       }
     ).catch(error => {  
       console.error(error);  
@@ -224,7 +244,6 @@ export default {
        this.searchResults=[]
        let i = 1
       response.data.forEach(element => {
-        if(i>8) return;
         if (element.abstract.length>140)
         element.abstract = element.abstract.substring(0,135)+"..."
         if(element.origin!=="食谱秀"){
@@ -236,7 +255,6 @@ export default {
             "url":element.html_url
           })
           i++
-
         }
       });
       // let list = response.data
@@ -416,6 +434,12 @@ created(){
   list-style: none;
   text-align: left;
 }
+.el-divider{
+  top:-25px;
+  width:350px;
+  height:2px;
+  color:#000;
+}
 .el-row {
     margin: 0px 0 15px 10px;
   }
@@ -469,7 +493,7 @@ created(){
   font-weight: bold;
 }
 .el-divider{
-    color:#000;
+    background-color: grey;
     margin-top:35px;
   }
 
@@ -561,7 +585,7 @@ a:hover {
 .main-wrapper .result-num {
   position: absolute;
   width: 538px;
-  line-height: 30px;
+  line-height: 15px;
   font-size: 13px;
   color: #999999;
 }
@@ -570,7 +594,7 @@ a:hover {
   position: absolute;
   width: 650px;
   height: 1360px;
-  top: 40px;
+  top: 25px;
   /* background-color: #bfc; */
 }
 
@@ -640,20 +664,20 @@ a:hover {
 
 .main-wrapper .search-ranking {
   position: absolute;
-  padding-left:20px;
-  padding-top: 20px;
+  padding-left:30px;
+  padding-top: 40px;
   width: 400px;
   height: 450px;
   right:-10%;
   top: 25px;
   border-radius: 4px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+  box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.1)
 }
 
 .main-wrapper .search-ranking .set{
   display:flex;
   flex-direction: row;
-  height:128px;
+  height:20px;
   margin-bottom: 20px;
 }
 .main-wrapper .search-ranking li {
@@ -695,7 +719,7 @@ a:hover {
   height:110px;
   margin-top: 8px;
   margin-bottom: 8px;
-  margin-right: 30px;
+  margin-right: 10px;
 }
 
 .main-wrapper .search-ranking .el-image{

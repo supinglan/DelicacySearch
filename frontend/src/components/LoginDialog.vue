@@ -124,9 +124,10 @@ import axios from 'axios';
           });
         this.user = this.loginForm.username;
         this.loginFormVisible = false;
-      //   var para = new URLSearchParams();
-      //   para.append("username",this.loginForm.username);
-      //   para.append("password",this.loginForm.password);
+        // let para = {
+        //   username : this.loginForm.username,
+        //   password : this.loginForm.password,
+        // }
       //   await axios.post('http://localhost:8088/user/login',para)
       // .then(response=>{
       //   if(response.message=="密码错误"){
@@ -159,10 +160,11 @@ import axios from 'axios';
             message: '注册成功!'
           });
         this.registerFormVisible = false;
-      //   var para = new URLSearchParams();
-      //   para.append("username",this.registerForm.username);
-      //   para.append("password",this.registerForm.password);
-      //   para.append("email",this.registerForm.email)
+        // let para = {
+        //   username:this.registerForm.username,
+        //   password:this.registerForm.password,
+        //   email:this.registerForm.email
+        // }
       //   await axios.post('http://localhost:8088/user/register',para)
       // .then(response=>{
       //   if(response.message == "注册成功"){

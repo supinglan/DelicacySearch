@@ -125,9 +125,6 @@ export default {
 .chat-content {
     width: 100%;
     padding: 20px;
-   
-
-    
 }
 .word {
         display: flex;

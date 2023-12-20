@@ -32,7 +32,7 @@ import java.util.Random;
 public class testUtil {
     static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
     static String referer = "https://www.xiachufang.com/";
-    static Integer MAX_DOCUMENT = 200;
+    static Integer MAX_DOCUMENT = 200000;
     @Autowired
     static FoodTripleMapper foodTripleMapper;
     public static void CreateIndex () throws Exception {

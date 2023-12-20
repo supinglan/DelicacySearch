@@ -1,6 +1,8 @@
 package team.g3.delicacysearch.Utils;
 
 import com.alibaba.fastjson.JSON;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import team.g3.delicacysearch.dao.FoodTripleMapper;
 import team.g3.delicacysearch.model.FoodTriple;
 import team.g3.delicacysearch.pojo.Script;
@@ -38,34 +40,75 @@ public class IndexBuilder {
                 RestClient.builder(
                         new HttpHost("120.55.14.3", 9200, "http")));
 
-        GetIndexRequest getIndexRequest = new GetIndexRequest("script_test");
+        GetIndexRequest getIndexRequest = new GetIndexRequest("script_index");
         boolean indexExists = restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);
         if (indexExists) {
             // 创建删除索引请求
-            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("script_test");
+            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("script_index");
             // 发送删除索引请求
             restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
-            System.out.println("索引已存在并已删除：" + "script_test");
+            System.out.println("索引已存在并已删除：" + "script_index");
         } else {
             System.out.println("索引不存在：" + "script_index");
         }
-        CreateIndexRequest request = new CreateIndexRequest("script_test");
+        XContentBuilder mapping = XContentFactory.jsonBuilder();
+        mapping.startObject();
+        {
+            mapping.startObject("properties");
+            {
+                // text_title字段使用IK分词器
+                mapping.startObject("title");
+                {
+                    mapping.field("type", "text");
+                    mapping.field("analyzer", "ik_max_word");
+                }
+                mapping.endObject();
+
+                // Abstract字段使用IK分词器
+                mapping.startObject("abstract");
+                {
+                    mapping.field("type", "text");
+                    mapping.field("analyzer", "ik_max_word");
+                }
+                mapping.endObject();
+
+                // ingredient字段使用IK分词器
+                mapping.startObject("ingredient");
+                {
+                    mapping.field("type", "text");
+                    mapping.field("analyzer", "ik_max_word");
+                }
+                mapping.endObject();
+
+                // steps字段使用IK分词器
+                mapping.startObject("steps");
+                {
+                    mapping.field("type", "text");
+                    mapping.field("analyzer", "ik_max_word");
+                }
+                mapping.endObject();
+            }
+            mapping.endObject();
+        }
+        mapping.endObject();
+        CreateIndexRequest request = new CreateIndexRequest("script_index");
+        request.mapping(mapping);
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);
 
 
-        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pinyin_test");
+        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pigg_test_pinyin");
         boolean indexExists2 = restHighLevelClient.indices().exists(getIndexRequest2, RequestOptions.DEFAULT);
         if (indexExists2) {
             // 创建删除索引请求
-            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pinyin_test");
+            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pigg_test_pinyin");
             // 发送删除索引请求
             restHighLevelClient.indices().delete(deleteIndexRequest1, RequestOptions.DEFAULT);
-            System.out.println("索引已存在并已删除：" + "pinyin_test");
+            System.out.println("索引已存在并已删除：" + "pigg_test_pinyin");
         } else {
-            System.out.println("索引不存在：" + "pinyin_test");
+            System.out.println("索引不存在：" + "pigg_test_pinyin");
         }
-        CreateIndexRequest request2 = new CreateIndexRequest("pinyin_test");
+        CreateIndexRequest request2 = new CreateIndexRequest("pigg_test_pinyin");
         request2.source(getIndexSettings(), XContentType.JSON);
 
         CreateIndexResponse response1 = restHighLevelClient.indices().create(request2, RequestOptions.DEFAULT);
@@ -83,6 +126,7 @@ public class IndexBuilder {
 
 
         //美食天下
+        int num = 1;
         for (int t = 12; t <= 700000; t++) {
             String url = "https://home.meishichina.com/recipe-" + t + ".html";
             try {
@@ -156,7 +200,7 @@ public class IndexBuilder {
                 //放入索引
                 Script script = new Script(pict_url, html_url, text_title, Abstract, ingredient, steps, source, tags, click, 0);
                 IndexRequest request1 = new IndexRequest("script_index");
-                request1.id(Integer.toString(t));
+                request1.id(Integer.toString(num));
                 request1.timeout(TimeValue.timeValueSeconds(1));
                 request1.timeout("1s");
                 request1.source(JSON.toJSONString(script), XContentType.JSON);
@@ -165,9 +209,10 @@ public class IndexBuilder {
 
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
                 IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
-                request3.id(Integer.toString(t)); // 设置文档ID
+                request3.id(Integer.toString(num++)); // 设置文档ID
                 request3.source(documents1, XContentType.JSON);
                 IndexResponse indexResponse4 = restHighLevelClient.index(request3, RequestOptions.DEFAULT);
+                if(num>200000) break;
             }
             catch (Exception e) {
                 // 处理HTTP状态异常

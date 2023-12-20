@@ -18,7 +18,12 @@ public class KnowledgeGraphService {
     private ESqueryService squeryService;
     @Autowired
     private FoodTripleMapper foodTripleMapper;
-    public KnowledgeGraph getKnowledgeGraph(String searchText) throws IOException {
+    public List<FoodTriple> getKnowledgeGraph(String searchText) throws IOException {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
         String cuisine = squeryService.executeSearchQuery(searchText,0).get(0).getTitle();
         List<String> cuisines = new ArrayList<>();
         cuisines.add(cuisine);

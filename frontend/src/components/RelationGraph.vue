@@ -40,7 +40,6 @@ export default {
             isShowNodeMenuPanel: false,
             graphOptions: {
                 "disableLineClickEffect": true,
-                "backgroundImage": "https://github.com/supinglan/DelicacySearch/blob/main/frontend/src/views/logo.png",
                 "backgroundImageNoRepeat": true,
                 "downloadImageFileName": "my-graph",
                 "moveToCenterWhenRefresh": false,

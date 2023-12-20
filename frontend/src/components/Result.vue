@@ -48,7 +48,7 @@
     <div class="main-wrapper">
       <!-- 顶部搜索结果个数 -->
       <div class="result-num">
-        <span>为您找到相关结果约{{searchResults.length}}个</span>
+        <span>为您找到相关结果约{{total}}个</span>
       </div>
       <!-- 搜索结果 -->
       <ul class="results">
@@ -60,7 +60,7 @@
       <!-- <AIQA style="height: 500px; width:600px"/> -->
         <li
           class="result-content"
-          v-for="searchResult in searchResults.slice(1+(currentPage-1)*8,currentPage*8)"
+          v-for="searchResult in searchResults"
           :key="searchResult.id"
         >
           <!-- 如果返回的图片地址不为空，有图片盒子，文字盒子样式为des-text1 -->
@@ -141,7 +141,7 @@
           <el-pagination
             background
             layout="prev, pager, next"
-            :total="searchResults.length"
+            :total="total"
             :current-page="currentPage"
             :page-size="8"
             @current-change="handleCurrentChange">
@@ -166,6 +166,7 @@ export default {
   data () {
     return {
       currentPage:1,
+      total:1,
       radio:"常规搜索",
       Hot:["家常菜","早餐","汤","排骨","白菜","鸡蛋","红豆","南瓜"],
       Recommend:['百香果','柑橘','柠檬'],
@@ -210,10 +211,11 @@ export default {
   },
   handleCurrentChange(val){
     this.currentPage = val;
+    this.Search();
     console.log("current page:"+val);
   },
   async updateHot(){
-    await axios.get("http://localhost:8088/hot")
+    await axios.post("http://localhost:8088/hot")
     .then(response => {
         this.Hot = response.data;
       }
@@ -222,7 +224,9 @@ export default {
     });
   },
   async updateRecommend(){
-    await axios.get("http://localhost:8088/recommend")
+    const para = new URLSearchParams();
+    para.append("username","test");  
+    await axios.post("http://localhost:8088/recommend",para)
     .then(response => {
       console.log(response.data);
         this.Recommend = response.data;
@@ -233,7 +237,6 @@ export default {
     });
   },
   async Search(){
-  this.updateRecommend();
   const params = new URLSearchParams();  
   params.append('SearchText',this.$route.params.para);
   params.append('Method',this.Method);
@@ -242,12 +245,14 @@ export default {
   params.append('Category',this.Category);
   params.append('sortType',this.Sort);
   params.append('type',this.Type);
+  params.append('currentPage',this.currentPage);
   params.append('username',"spl");
     await axios.post('http://localhost:8088/search',params)
     .then(response=>{
-       this.searchResults=[]
-       let i = 1
-      response.data.forEach(element => {
+       this.searchResults=[];
+       let i = (this.currentPage-1)*8+1;
+       this.total = response.data.first;
+      response.data.second.forEach(element => {
         if (element.abstract.length>140)
         element.abstract = element.abstract.substring(0,135)+"..."
         if(element.origin!=="食谱秀"){
@@ -424,7 +429,9 @@ export default {
 },
 created(){
   this.updateHot();
+  this.updateRecommend();
   this.Search();
+  console.log(this.Hot);
   
 },
 

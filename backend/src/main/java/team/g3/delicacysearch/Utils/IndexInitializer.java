@@ -1,6 +1,5 @@
 package team.g3.delicacysearch.Utils;
 
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -10,6 +9,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,16 @@ import org.springframework.stereotype.Component;
 public class IndexInitializer implements CommandLineRunner {
         @Autowired
         private RestHighLevelClient elasticsearchClient;
+
+        @Autowired
+        private IndexBuilder indexBuilder;
+        @Value("${buildindex.enabled}")
+        private boolean enabled;
         @Override
         public void run(String... args) throws Exception {
+                if(!enabled){
+                        return;
+                }
                 String indexName = "search_history";
                 GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
                 if (!elasticsearchClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT)) {
@@ -46,5 +54,6 @@ public class IndexInitializer implements CommandLineRunner {
                                 System.out.println("history_keywords索引初始化失败！");
                         }
                 }
+                indexBuilder.buildIndex();
         }
 }

@@ -21,7 +21,6 @@ public class KnowledgeGraphController {
     @RequestMapping(value = "/getKG", method = RequestMethod.POST)
     public KnowledgeGraph getKnowledgeGraph(String rootText) throws IOException {
         System.out.println(rootText);
-        System.out.println("kd");
         return knowledgeGraphService.getKnowledgeGraph(rootText);
     }
 }

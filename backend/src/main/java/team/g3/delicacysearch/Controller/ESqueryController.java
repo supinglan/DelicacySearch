@@ -28,7 +28,6 @@ public class ESqueryController {
     //type：按照何种方式搜索（食材、steps）
     //sortType：按照何种方式排序（按clicks、score、综合排序）
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-
     public Pair<Integer, ArrayList<Script>> selectByTag(String SearchText, Integer Method, Integer Taste, Integer Scene, Integer Category, Integer type, Integer sortType, String username, Integer currentPage) throws IOException {
         if(username!=null){
             recommendService.updateSearchHistory(username, SearchText);}

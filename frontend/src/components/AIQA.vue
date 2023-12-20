@@ -1,7 +1,7 @@
 <template>
     <div class="box" style="width: 100%; height: 100%;background-color: white; text-align: center;">
         <div style="font-weight: bold; font-size: 30px; padding-top: 15px; margin:0 auto">AI问答</div>
-        <div class="chat-content" id="chat" ref="mainScroll" style=" min-height: 70%;max-height: 70%; width: 100%;overflow-y: scroll;">
+        <div class="chat-content" id="chat" ref="mainScroll" style=" min-height: 70%;max-height: 70%; width: 100%;overflow-y: scroll; scroll-behavior: smooth;">
             <!-- recordContent 聊天记录数组-->
             <div v-for="item in messages.slice(1)">
                 <!-- 对方 -->
@@ -113,7 +113,7 @@ export default {
     },
     updated(){
         let scrollingDiv = document.getElementById('chat');  
-                    scrollingDiv.scrollTop = scrollingDiv.scrollHeight;  
+        scrollingDiv.scrollTop = scrollingDiv.scrollHeight;  
     }
 }
 </script>
@@ -121,14 +121,10 @@ export default {
 <style>
 .box{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    
 }
 .chat-content {
     width: 100%;
     padding: 20px;
-   
-
-    
 }
 .word {
         display: flex;

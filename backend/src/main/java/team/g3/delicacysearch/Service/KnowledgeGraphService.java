@@ -20,12 +20,14 @@ public class KnowledgeGraphService {
     private ESqueryService squeryService;
     @Autowired
     private FoodTripleMapper foodTripleMapper;
+
     static int stop_num=20;
     public KnowledgeGraph getKnowledgeGraph(String searchText) throws IOException {
         List<Node> nodes = new ArrayList<>();
         List<Line> lines = new ArrayList<>();
         List<FoodTriple> first = foodTripleMapper.selectBySource(searchText);
         nodes.add(new Node(searchText, searchText,"#38419D"));
+
         for (FoodTriple foodTriple : first) {
             System.out.println(foodTriple.getTarget());
             List<FoodTriple> second = foodTripleMapper.selectByTarget(foodTriple.getTarget());

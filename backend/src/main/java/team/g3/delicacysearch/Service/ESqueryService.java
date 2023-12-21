@@ -1,13 +1,13 @@
 package team.g3.delicacysearch.Service;
 
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.index.query.*;
 import team.g3.delicacysearch.pojo.Script;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 public class ESqueryService {
     @Autowired
     public RestHighLevelClient elasticsearchClient;
-    private final static String index_source = "test_kg";
-    private final static String pinyin_source = "test_kg_pingyin";
+    private final static String index_source = "script_index";
+    private final static String pinyin_source = "pigg_test_pinyin";
 
     //"test_kg""test_kg_pingyin"
 
@@ -100,8 +100,12 @@ public class ESqueryService {
         return total_res;
     }
 
+
+
+
     //按照标签搜索
-    public ArrayList<Script> searchByTags(String SearchText, ArrayList<Integer> searchOps, Integer type, Integer sortType) throws IOException {
+
+    public ArrayList<Script> search(String SearchText, ArrayList<Integer> searchOps, Integer type, Integer sortType) throws IOException {
         if (SearchText.toLowerCase().contains("or") || SearchText.contains("-") || SearchText.contains("*") || SearchText.matches(".*[\"“”].*"))
             return preProcess(SearchText, type, searchOps, sortType);
         //判断输入的搜索语句是否含有拼音
@@ -109,15 +113,12 @@ public class ESqueryService {
         //若包含。我们按照自动补全的函数，获取一系列的汉字String，再搜索这些汉字String
         if (containsLetter) {
             List<String> results = getNames(SearchText);
-            ArrayList<Script> total_results = new ArrayList<>();
-            for (String result : results) {
-                ArrayList<Script> part_results = searchByTags(result, searchOps, type, 0);
-                for (Script partResult : part_results) {
-                    if (!total_results.contains(partResult)) {
-                        total_results.add(partResult);
-                    }
-                }
-            }
+
+            String result = results.get(0);
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(0);list.add(0);list.add(0);list.add(0);
+            ArrayList<Script> total_results = search(result, list ,type, 0);
+
             switch (sortType) {
                 case 0:
                     return total_results;
@@ -141,6 +142,15 @@ public class ESqueryService {
                 return null;
         }
     }
+
+
+    public ArrayList<Script> search(String SearchText) throws IOException {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0);list.add(0);list.add(0);list.add(0);
+        return search(SearchText, list,0,0);
+    }
+
+
 
     //综合排序（相关度60% + 点击量40%）
     public ArrayList<Script> searchByAll(ArrayList<Script> results) throws IOException {
@@ -311,6 +321,72 @@ public class ESqueryService {
         return boolQuery;
     }
 
+    public Script gainResultById(int id) throws IOException {
+        SearchRequest searchRequest = new SearchRequest(index_source);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        TermQueryBuilder termQuery = QueryBuilders.termQuery("_id", id);
+        sourceBuilder.query(termQuery);
+        sourceBuilder.fetchSource(true);
+
+        searchRequest.source(sourceBuilder);
+
+        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = searchResponse.getHits();
+
+        if (hits.getTotalHits().value == 0) {
+            System.out.println("无结果！");
+            return null;
+        }
+
+        SearchHit hit = hits.getAt(0);
+
+        // 处理命中的文档
+        String url = hit.getSourceAsMap().get("html_url").toString();
+        String pic_url = hit.getSourceAsMap().get("pict_url").toString();
+        String title = hit.getSourceAsMap().get("title").toString();
+        String Abstract = hit.getSourceAsMap().get("abstract").toString();
+        String source = hit.getSourceAsMap().get("origin").toString();
+        Integer clicks = Integer.valueOf(hit.getSourceAsMap().get("clicks").toString());
+
+        ArrayList<String> steps = new ArrayList<>();
+        List<Object> stepsList = (List<Object>) hit.getSourceAsMap().get("steps");
+        if (stepsList != null) {
+            for (Object step : stepsList) {
+                if (step instanceof String) {
+                    steps.add((String) step);
+                }
+            }
+        }
+
+        ArrayList<String> ingredients = new ArrayList<>();
+        List<Object> ingreList = (List<Object>) hit.getSourceAsMap().get("ingredient");
+        if (ingreList != null) {
+            for (Object step : ingreList) {
+                if (step instanceof String) {
+                    ingredients.add((String) step);
+                }
+            }
+        }
+
+        ArrayList<String> tags = new ArrayList<>();
+        List<Object> tagLists = (List<Object>) hit.getSourceAsMap().get("tag");
+        if (tagLists != null) {
+            for (Object tag : tagLists) {
+                if (tag instanceof String) {
+                    tags.add((String) tag);
+                }
+            }
+        }
+
+        float score = hit.getScore();
+
+        // 在这里执行您希望的操作，比如打印或处理结果
+        System.out.println("菜名: " + title);
+        System.out.println("摘要:" + Abstract);
+        System.out.println(" ");
+        // 创建 Script 对象并返回
+        return new Script(id, pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
+    }
 
     //根据查询条件获取查询结果
     private ArrayList<Script> gainResults(BoolQueryBuilder boolQueryBuilder) throws IOException {
@@ -328,6 +404,7 @@ public class ESqueryService {
         if (hitnum == 0) System.out.println("无结果！");
         for (SearchHit hit : hits) {
             // 处理每个命中的文档
+            Integer id = Integer.valueOf(hit.getSourceAsMap().get("_id").toString());
             String url = hit.getSourceAsMap().get("html_url").toString();
             String pic_url = hit.getSourceAsMap().get("pict_url").toString();
             String title = hit.getSourceAsMap().get("title").toString();
@@ -368,7 +445,7 @@ public class ESqueryService {
             System.out.println(" ");
 //                System.out.println("网页地址: " + url);
 //                System.out.println("图片地址: " + pic_url);
-            Script ele = new Script(pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
+            Script ele = new Script(id, pic_url, url, title, Abstract, ingredients, steps, source, tags, clicks, score);
             result.add(ele);
         }
         return result;

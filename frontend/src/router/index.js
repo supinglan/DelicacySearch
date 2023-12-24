@@ -19,7 +19,7 @@ const routes = [
     component: Result
   },
   {
-    path: '/detail',
+    path: '/detail/:para',
     name: 'detail',
     component: Detail
   },

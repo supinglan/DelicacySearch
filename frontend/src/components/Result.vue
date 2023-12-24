@@ -61,14 +61,14 @@
         <li
           class="result-content"
           v-for="searchResult in searchResults"
-          :key="searchResult.id"
+          :key="searchResult.index"
         >
           <!-- 如果返回的图片地址不为空，有图片盒子，文字盒子样式为des-text1 -->
           <div class="description" v-if="searchResult.imgURL !== null">
                 <!-- 给img的src绑定数据要用v-bind -->
                 <img :src='searchResult.imgURL' class="img"/>
                 <h3 class = title>
-                  <a href="javascript:;" @click="jump(searchResult.url)">{{ searchResult.title }}</a>
+                  <a href="javascript:;" @click="jumpToInfo(searchResult.id)">{{ searchResult.title }}</a>
                 </h3> 
                 <div class="des-text1">
                   <div class="van-multi-ellipsis--l2">
@@ -80,7 +80,7 @@
           <!-- 如果返回的图片地址为空，没有图片盒子，文字盒子样式des-text2-->
           <div class="description" v-else>
             <h3 class = title>
-                  <a href="javascript:;" @click="jump(searchResult.url)">{{ searchResult.title }}</a>
+                  <a href="javascript:;" @click="jumpToInfo(searchResult.id)">{{ searchResult.title }}</a>
             </h3> 
             <div class="des-text2">
               <div class="van-multi-ellipsis--l2">{{ searchResult.abstracts }}</div>
@@ -95,7 +95,6 @@
         <div class="title">
           <i class="el-icon-search"></i>
           <span>猜你喜欢</span>
-         
         </div>
         <div class="set">
         <li class="item" v-on:click="handleClick(Recommend[0])">
@@ -257,7 +256,8 @@ export default {
         element.abstract = element.abstract.substring(0,135)+"..."
         if(element.origin!=="食谱秀"){
           this.searchResults.push({
-            "id": i,
+            "id":element.id,
+            "index": i,
             "title":element.title,
             "abstracts":element.abstract,
             "imgURL":element.pict_url,
@@ -278,8 +278,11 @@ export default {
     this.Search();
   },
   handleClick(val){
-    console.log("test");
     self.location.href = 'http://localhost:8080/result/'+val;
+  },
+  jumpToInfo(val){
+    console.log(val);
+    self.location.href = 'http://localhost:8080/detail/'+val;
   },
   updateType(){
     switch(this.radio){

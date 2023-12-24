@@ -26,7 +26,7 @@ public class ESqueryService {
     @Autowired
     public RestHighLevelClient elasticsearchClient;
     private final static String index_source = "script_index";
-    private final static String pinyin_source = "pigg_test_pinyin";
+    private final static String pinyin_source = "pinyin_index";
 
     //"test_kg""test_kg_pingyin"
 

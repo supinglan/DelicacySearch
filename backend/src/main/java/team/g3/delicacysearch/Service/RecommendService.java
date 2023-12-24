@@ -16,6 +16,7 @@ import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation.Buck
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import team.g3.delicacysearch.pojo.Script;
 
@@ -31,6 +32,7 @@ public class RecommendService
     @Autowired
     private ESqueryService squeryService;
     String indexName = "search_history";
+    List<String> hot =new ArrayList<>();
 
     public void updateSearchHistory(String username, String keyword) throws IOException {
         int topN = 3;
@@ -107,6 +109,10 @@ public class RecommendService
         return resultList.subList(0, 8);
     }
     public List<String>getHot(){
+       return hot;
+    }
+    @Scheduled(fixedRate = 3000000) // 每5秒执行一次任务
+    public void updateHot(){
         int topN = 8;
         TermsAggregationBuilder aggregation = AggregationBuilders
                 .terms("topN")
@@ -154,8 +160,9 @@ public class RecommendService
         }
         if(resultList.size()<8)
         {
-            return resultList;
+            hot=resultList;
         }
-        return resultList.subList(0, 8);
+        hot = resultList.subList(0, 8);
     }
+
 }

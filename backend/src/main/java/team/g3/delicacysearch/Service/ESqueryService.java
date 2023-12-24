@@ -404,7 +404,7 @@ public class ESqueryService {
         if (hitnum == 0) System.out.println("无结果！");
         for (SearchHit hit : hits) {
             // 处理每个命中的文档
-            Integer id = Integer.valueOf(hit.getSourceAsMap().get("_id").toString());
+            Integer id = Integer.parseInt(hit.getId());
             String url = hit.getSourceAsMap().get("html_url").toString();
             String pic_url = hit.getSourceAsMap().get("pict_url").toString();
             String title = hit.getSourceAsMap().get("title").toString();

@@ -96,19 +96,18 @@ public class IndexBuilder {
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);
 
-
-        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pigg_test_pinyin");
+        GetIndexRequest getIndexRequest2 = new GetIndexRequest("pinyin_index");
         boolean indexExists2 = restHighLevelClient.indices().exists(getIndexRequest2, RequestOptions.DEFAULT);
         if (indexExists2) {
             // 创建删除索引请求
-            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pigg_test_pinyin");
+            DeleteIndexRequest deleteIndexRequest1 = new DeleteIndexRequest("pinyin_index");
             // 发送删除索引请求
             restHighLevelClient.indices().delete(deleteIndexRequest1, RequestOptions.DEFAULT);
-            System.out.println("索引已存在并已删除：" + "pigg_test_pinyin");
+            System.out.println("索引已存在并已删除：" + "pinyin_index");
         } else {
-            System.out.println("索引不存在：" + "pigg_test_pinyin");
+            System.out.println("索引不存在：" + "pinyin_index");
         }
-        CreateIndexRequest request2 = new CreateIndexRequest("pigg_test_pinyin");
+        CreateIndexRequest request2 = new CreateIndexRequest("pinyin_index");
         request2.source(getIndexSettings(), XContentType.JSON);
 
         CreateIndexResponse response1 = restHighLevelClient.indices().create(request2, RequestOptions.DEFAULT);
@@ -119,11 +118,6 @@ public class IndexBuilder {
         } else {
             System.out.println("Failed to create index.");
         }
-
-
-        //下厨房
-        testUtil.CreateIndex ();
-
 
         //美食天下
         int num = 1;
@@ -208,7 +202,7 @@ public class IndexBuilder {
                 System.out.println(indexResponse.toString());
 
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
-                IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
+                IndexRequest request3 = new IndexRequest("pinyin_index");
                 request3.id(Integer.toString(num++)); // 设置文档ID
 
                 request3.source(documents1, XContentType.JSON);
@@ -224,6 +218,8 @@ public class IndexBuilder {
                 e.printStackTrace();
             }
         }
+        //下厨房
+        testUtil.CreateIndex ();
         System.out.println("索引创建完成！");
     }
 

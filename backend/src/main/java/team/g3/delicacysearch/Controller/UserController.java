@@ -8,6 +8,7 @@ import java.util.Map;
 
 @RequestMapping("/user")
 @RestController
+@CrossOrigin
 public class UserController {
     @Autowired
     UserService userService;
@@ -17,7 +18,7 @@ public class UserController {
         return userService.login(username, password);
     }
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Map<String, Object> register( String email, String username, String password) {
+    public Map<String, Object> register( String email,String password, String username) {
         System.out.println(email);
         System.out.println(username);
         System.out.println(password);

@@ -98,7 +98,7 @@
 </el-row>
 <el-row>
   <el-col :span="16" :offset="4" style="text-align: left;margin-top: 30px;">
-    <RelationGraph :root="result.title"></RelationGraph>
+    <RelationGraph :root="result.title" :currentNodeText="result.title" style="height:600px"></RelationGraph>
   </el-col>
 </el-row>
     </el-main>
@@ -115,12 +115,12 @@ import RelationGraph from './RelationGraph.vue';
 export default{
   data: function () {
     return {
-      id:this.$route.params.para.title,
+      id:this.$route.params.para,
       result:{
         id:1,
         picUrl:"https://bkimg.cdn.bcebos.com/pic/b999a9014c086e061d95946c6a5f6cf40ad162d95dc6?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2UxNTA=,g_7,xp_5,yp_5/format,f_auto",
         url:"https://baike.baidu.com/item/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%82%92%E9%B8%A1%E8%9B%8B/600334?fromtitle=%E7%95%AA%E8%8C%84%E7%82%92%E8%9B%8B&fromid=33679",
-        title:"番茄炒蛋",
+        title:"",
         abstract:"西红柿炒鸡蛋，是以西红柿和鸡蛋为主要材料制作的家常菜，主要食材为鸡蛋，西红柿，食用油，盐，清水，生抽，味精（自行选择是否添加），葱花，白砂糖，蚝油。",
         ingredient:["鸡蛋","西红柿","食用油","盐","清水","生抽","味精","葱花","白砂糖","蚝油"],
         step:["准备食材。鸡蛋三个、中等大小西红柿两个。盐1克、糖3克、食用油适量。","将鸡蛋去壳打散放入碗中备用、西红柿切小块备用","锅中倒入适量食用油，油热之后，倒入鸡蛋液。","待鸡蛋稍稍凝固炒散后，把鸡蛋推到一边（或盛出备用）。然后放入西红柿，煸炒均匀。","往锅里加少许糖、少许盐，少许生抽煸炒均匀，然后大火收汁","放盐翻炒匀均后关火，即可装盘。"],
@@ -153,20 +153,21 @@ export default{
     async SearchInfo(){
       const para = new URLSearchParams();
       para.append("id",this.id);
-      await axios.post("http://localhost:8080/getInfo",para)
+      await axios.post("http://localhost:8088/getInfo",para)
       .then(response =>{
-        this.results={
+        this.result={
           id:response.data.id,
-          picUrl:response.data.pic_url,
-          url:response.data.url,
+          picUrl:response.data.pict_url,
+          url:response.data.html_url,
           title:response.data.title,
           abstract:response.data.abstract,
-          ingredient:response.data.ingredients,
+          ingredient:response.data.ingredient,
           step:response.data.steps,
           source:response.data.source,
-          tag:response.data.tags,
+          tag:response.data.tag,
           clicks:response.data.clicks,
         };
+        console.log(response.data);
       })
       .catch(error =>{
         console.error(error);  
@@ -175,7 +176,7 @@ export default{
   },
   created(){
       this.borderHeight = ((this.result.ingredient.length/12)+1)*80;
-      console.log(this.borderHeight);
+      this.SearchInfo();
     },
 }
 

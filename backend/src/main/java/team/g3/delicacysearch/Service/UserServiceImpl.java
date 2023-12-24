@@ -21,11 +21,11 @@ public class UserServiceImpl implements UserService {
             result.put("message", "用户不存在");
         } else if (password.equals(user.getPassword())) {
             System.out.println(username + " login success\n");
-            result.put("id", user.getId());
+            result.put("message", "登录成功");
         } else {
             result.put("message", "密码错误");
         }
-        result.put("message", "登录成功");
+
         return result;
     }
 

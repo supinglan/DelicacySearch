@@ -119,6 +119,7 @@ public class IndexBuilder {
             System.out.println("Failed to create index.");
         }
 
+
         //美食天下
         int num = 1;
         for (int t = 12; t <= 700000; t++) {
@@ -202,6 +203,7 @@ public class IndexBuilder {
                 System.out.println(indexResponse.toString());
 
                 String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
+
                 IndexRequest request3 = new IndexRequest("pinyin_index");
                 request3.id(Integer.toString(num++)); // 设置文档ID
 

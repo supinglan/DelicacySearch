@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <!-- 顶部导航外部容器 -->
     <div class="top-bar-wrapper">
       <!-- 内部容器 -->
@@ -19,12 +19,6 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          </li>
-          <li>
-            <a href="javascript:;">
-              <img src="../assets/setting.png" alt="profile" />
-              <span class="user">Setting</span>
-            </a>
           </li>
           <li>
             <a href="javascript:;">
@@ -52,8 +46,8 @@
       </div>
       <!-- 搜索结果 -->
       <ul class="results">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item title="自定义筛选" name="1">
+      <el-collapse @change="updateBottom" v-model="activeNames">
+        <el-collapse-item  title="自定义筛选" name="1">
           <Selection :updateSelect="this.updateSelect"></Selection>
         </el-collapse-item>
       </el-collapse>
@@ -116,25 +110,25 @@
        
       <div class="set" >
         <div style="margin-left: 7%;">
-          <li><span style="color:crimson">1</span><a href="javascript:;" v-on:click="handleClick(Hot[0])">{{Hot[0]}}</a></li> 
-          <li><span style="color:chocolate">2</span><a href="javascript:;" v-on:click="handleClick(Hot[1])">{{Hot[1]}}</a></li> 
-          <li><span style="color:gold">3</span><a href="javascript:;" v-on:click="handleClick(Hot[2])">{{Hot[2]}}</a></li> 
-          <li><span>4</span><a href="javascript:;" v-on:click="handleClick(Hot[3])">{{Hot[3]}}</a></li> 
+          <li style="width:150px;"><span style="color:crimson;">1</span><a href="javascript:;" v-on:click="handleClick(Hot[0])">{{Hot[0]}}</a></li> 
+          <li style="width:150px;"><span style="color:chocolate">2</span><a href="javascript:;" v-on:click="handleClick(Hot[1])">{{Hot[1]}}</a></li> 
+          <li style="width:150px;"><span style="color:gold">3</span><a href="javascript:;" v-on:click="handleClick(Hot[2])">{{Hot[2]}}</a></li> 
+          <li style="width:150px;"><span>4</span><a href="javascript:;" v-on:click="handleClick(Hot[3])">{{Hot[3]}}</a></li> 
         </div>
-        <div style="margin-left: 25%;">
-          <li><span>5</span><a href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
-          <li><span>6</span><a href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
-          <li><span>7</span><a href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
-          <li><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
+        <div style="margin-left: 16%;">
+          <li style="width:150px;"><span>5</span><a href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
+          <li style="width:150px;"><span>6</span><a href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
+          <li style="width:150px;"><span>7</span><a href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
+          <li style="width:150px;"><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
         </div>
       </div>
-      
+      <AIQA style="height:600px;width:530px;margin-top:300px;margin-left: -30px;"></AIQA>
       
       </ul>
 
     </div>
     <!-- 最底部 -->
-    <div class="bottom-bar">
+    <div class="bottom-bar" :style="bottomProgress">
       <!-- 底部翻页栏 -->
         <ul class="index">
           <el-pagination
@@ -143,13 +137,13 @@
             :total="total"
             :current-page="currentPage"
             :page-size="8"
-            @current-change="handleCurrentChange">
+            @current-change="handleCurrentChange"
+            >
           </el-pagination>
       </ul>
       <!-- 最底部功能栏 -->
       <ul class="bottom-tools">
-        <li>帮助</li>
-        <li>用户反馈</li>
+       <el-link @click="jumpHelp">帮助</el-link>
       </ul>
     </div>
   </div>
@@ -167,8 +161,8 @@ export default {
       currentPage:1,
       total:1,
       radio:"常规搜索",
-      Hot:["家常菜","早餐","汤","排骨","白菜","鸡蛋","红豆","南瓜"],
-      Recommend:['百香果','柑橘','柠檬'],
+      Hot:[],
+      Recommend:[],
       activeNames: [],
       Username:"Guest",
       Method:0,
@@ -177,6 +171,7 @@ export default {
       Category:0,
       Sort:0,
       Type:0,
+      bottomTop:0,
       option: [{
         value: '选项1',
         label: '综合排序'
@@ -195,12 +190,17 @@ export default {
         searchContent: ''
       },
     searchResults: [
-      
     ]
     }
   },
   components: { SearchZone,Selection,AIQA,LoginDialog },
-
+  computed:{
+    bottomProgress(){
+      const style = {}
+      style.top = this.bottomTop + 'px'
+      return style
+    }
+  },
   methods: {
   onConfirm() {
     this.$refs.item.toggle();
@@ -212,6 +212,14 @@ export default {
     this.currentPage = val;
     this.Search();
     console.log("current page:"+val);
+  },
+  updateBottom(){
+    if(this.bottomTop == 0){
+      this.bottomTop = 450;
+    }else{
+      this.bottomTop = 0;
+    }
+    console.log("bottom:"+this.bottomTop);
   },
   async updateHot(){
     await axios.post("http://localhost:8088/hot")
@@ -283,6 +291,9 @@ export default {
   jumpToInfo(val){
     console.log(val);
     self.location.href = 'http://localhost:8080/detail/'+val;
+  },
+  jumpHelp(){
+    self.location.href = 'http://localhost:8080/help'
   },
   updateType(){
     switch(this.radio){
@@ -450,12 +461,12 @@ created(){
   text-align: left;
 }
 
-.el-divider{
+/* .el-divider{
   top:-25px;
   width:350px;
   height:2px;
   color:#000;
-}
+} */
 
 .el-row {
     margin: 0px 0 15px 10px;
@@ -536,6 +547,13 @@ a:hover {
   color: #a7aab5;
 }
 
+.container{
+  height:100vh;
+  overflow-y: scroll;
+  max-width:100vw;
+  margin:0 auto;
+}
+
 /* ----------------顶部------------------ */
 .top-bar-wrapper {
   position: relative;
@@ -558,7 +576,7 @@ a:hover {
 .info {
   position: relative;
   float: right;
-  margin: 0px 150px 0 0;
+  margin: 0px 280px 0 0;
   bottom:40px;
 }
 
@@ -653,6 +671,7 @@ a:hover {
 .main-wrapper .results .description .title{
   margin-left: 5px;
   grid-area: title;
+  font-size:20px;
 }
 .main-wrapper .results .description img {
   grid-area: img;
@@ -683,9 +702,9 @@ a:hover {
   position: absolute;
   padding-left:30px;
   padding-top: 40px;
-  width: 400px;
-  height: 450px;
-  right:-10%;
+  width: 500px;
+  height: 400px;
+  right:-20%;
   top: 25px;
   border-radius: 4px;
   box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.1)
@@ -695,8 +714,11 @@ a:hover {
   display:flex;
   flex-direction: row;
   height:20px;
+  width:500px;
   margin-bottom: 20px;
 }
+
+
 .main-wrapper .search-ranking li {
   display: flex;
   width: 100px;
@@ -734,6 +756,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   height:110px;
+  width:150px;
   margin-top: 8px;
   margin-bottom: 8px;
   margin-right: 10px;
@@ -758,7 +781,7 @@ a:hover {
 
 /* ----------------------最底部-------------------------- */
 .bottom-bar {
-  position: absolute;
+  position: relative;
   width: 100%;
 }
 

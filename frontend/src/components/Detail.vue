@@ -157,7 +157,7 @@
         window.location.href = url;
       },
       search(val){
-        self.location.href = 'http://120.55.14.3:8088/result/'+val;
+        self.location.href = 'http://localhost:8080/result/'+val;
       },
       async SearchInfo(){
         const para = new URLSearchParams();

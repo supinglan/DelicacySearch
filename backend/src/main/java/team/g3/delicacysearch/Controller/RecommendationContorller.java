@@ -25,7 +25,7 @@ public class RecommendationContorller {
     }
 
     //热搜
-    @RequestMapping(value = "/hot", method = RequestMethod.POST)
+        @RequestMapping(value = "/hot", method = RequestMethod.POST)
     public List<String> hot() throws IOException {
         return recommendService.getHot();
     }

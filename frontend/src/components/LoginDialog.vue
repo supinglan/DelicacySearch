@@ -118,73 +118,81 @@ import axios from 'axios';
         }
       },
       async Login() {
-        this.$message({
-            type: 'success',
-            message: '登录成功!'
+        // this.$message({
+        //     type: 'success',
+        //     message: '登录成功!'
+        //   });
+
+        const para = new URLSearchParams;
+       para.append("username",this.loginForm.username);
+       para.append("password",this.loginForm.password);
+       
+        await axios.post('http://localhost:8088/user/login',para)
+      .then(response=>{
+        console.log(response)
+        if(response.data.message=="密码错误"){
+          this.$message({
+            type: 'error',
+            message: '密码错误！'
           });
-        this.user = this.loginForm.username;
+        }else if(response.data.message=="用户不存在"){
+          this.$message({
+            type: 'error',
+            message: '用户不存在!'
+          });
+        }else if(response.data.message=="登录成功"){
+            this.$message({
+               type: 'success',
+               message: '登录成功'
+          });
+         this.user = this.loginForm.username;
         this.loginFormVisible = false;
-        // let para = {
-        //   username : this.loginForm.username,
-        //   password : this.loginForm.password,
-        // }
-      //   await axios.post('http://localhost:8088/user/login',para)
-      // .then(response=>{
-      //   if(response.message=="密码错误"){
-      //     this.$message({
-      //       type: 'error',
-      //       message: '密码错误！'
-      //     });
-      //   }else if(response.message=="用户不存在"){
-      //     this.$message({
-      //       type: 'error',
-      //       message: '用户不存在!'
-      //     });
-      //   }else if(response.message=="登陆成功"){
-      //       this.$message({
-      //          type: 'success',
-      //          message: '登陆成功'
-      //     });
-      //   }else{
-      //     this.$message({
-      //          type: 'error',
-      //          message: '出错啦'
-      //     });
-      //   }
+        }else{
+          this.$message({
+               type: 'error',
+               message: '出错啦'
+          });
+        }
         
-      // })
+      })
       },
       async Register() {
-        this.$message({
+        // this.$message({
+        //     type: 'success',
+        //     message: '注册成功!'
+        //   });
+
+       const para = new URLSearchParams;
+       para.append("username",this.registerForm.username);
+       para.append("password",this.registerForm.password);
+       para.append("email",this.registerForm.email);
+        
+        await axios.post('http://localhost:8088/user/register',para)
+      .then(response=>{
+        if(response.data.message == "注册成功"){
+          this.$message({
             type: 'success',
             message: '注册成功!'
           });
-        this.registerFormVisible = false;
-        // let para = {
-        //   username:this.registerForm.username,
-        //   password:this.registerForm.password,
-        //   email:this.registerForm.email
-        // }
-      //   await axios.post('http://localhost:8088/user/register',para)
-      // .then(response=>{
-      //   if(response.message == "注册成功"){
-      //     this.$message({
-      //       type: 'success',
-      //       message: '注册成功!'
-      //     });
-      //   }else if(response.message == "电子邮箱已被注册"){
-      //     this.$message({
-      //       type: 'error',
-      //       message: '电子邮箱已被注册，注册失败!'
-      //     });
-      //   }else if(response.message == "用户名已被注册"){
-      //     this.$message({
-      //       type: 'error',
-      //       message: '用户名已被注册，注册失败!'
-      //     });
-      //   }
+          this.registerFormVisible = false;
+        }else if(response.data.message == "电子邮箱已被注册"){
+          this.$message({
+            type: 'error',
+            message: '电子邮箱已被注册，注册失败!'
+          });
+        }else if(response.data.message == "用户名已被注册"){
+          this.$message({
+            type: 'error',
+            message: '用户名已被注册，注册失败!'
+          });
+        }else{
+          this.$message({
+               type: 'error',
+               message: '出错啦'
+          });
+        }
         
-      // })
+      })
       },
       
     }

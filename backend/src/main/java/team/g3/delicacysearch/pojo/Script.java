@@ -13,6 +13,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @Component
 public class Script {
+     Integer id;
      String pict_url;
      String html_url;
      String title;

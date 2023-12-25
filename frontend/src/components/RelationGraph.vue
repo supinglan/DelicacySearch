@@ -27,9 +27,13 @@ import RelationGraph from 'relation-graph';
 export default {
     components: { RelationGraph },
     props: {
-
         root: ''
-
+    },
+    watch:{
+        root()
+        {        
+        this.showSeeksGraph();
+        this.currentNodeText = this.root}
     },
     data() {
         return {

@@ -46,8 +46,8 @@
       </div>
       <!-- 搜索结果 -->
       <ul class="results">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item title="自定义筛选" name="1">
+      <el-collapse @change="updateBottom" v-model="activeNames">
+        <el-collapse-item  title="自定义筛选" name="1">
           <Selection :updateSelect="this.updateSelect"></Selection>
         </el-collapse-item>
       </el-collapse>
@@ -122,13 +122,13 @@
           <li style="width:150px;"><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
         </div>
       </div>
-      <AIQA style="height:600px;margin-top:300px;"></AIQA>
+      <AIQA style="height:600px;width:530px;margin-top:300px;margin-left: -30px;"></AIQA>
       
       </ul>
 
     </div>
     <!-- 最底部 -->
-    <div class="bottom-bar">
+    <div class="bottom-bar" :style="bottomProgress">
       <!-- 底部翻页栏 -->
         <ul class="index">
           <el-pagination
@@ -137,7 +137,8 @@
             :total="total"
             :current-page="currentPage"
             :page-size="8"
-            @current-change="handleCurrentChange">
+            @current-change="handleCurrentChange"
+            >
           </el-pagination>
       </ul>
       <!-- 最底部功能栏 -->
@@ -170,6 +171,7 @@ export default {
       Category:0,
       Sort:0,
       Type:0,
+      bottomTop:0,
       option: [{
         value: '选项1',
         label: '综合排序'
@@ -188,12 +190,17 @@ export default {
         searchContent: ''
       },
     searchResults: [
-      
     ]
     }
   },
   components: { SearchZone,Selection,AIQA,LoginDialog },
-
+  computed:{
+    bottomProgress(){
+      const style = {}
+      style.top = this.bottomTop + 'px'
+      return style
+    }
+  },
   methods: {
   onConfirm() {
     this.$refs.item.toggle();
@@ -205,6 +212,14 @@ export default {
     this.currentPage = val;
     this.Search();
     console.log("current page:"+val);
+  },
+  updateBottom(){
+    if(this.bottomTop == 0){
+      this.bottomTop = 450;
+    }else{
+      this.bottomTop = 0;
+    }
+    console.log("bottom:"+this.bottomTop);
   },
   async updateHot(){
     await axios.post("http://localhost:8088/hot")
@@ -561,7 +576,7 @@ a:hover {
 .info {
   position: relative;
   float: right;
-  margin: 0px 150px 0 0;
+  margin: 0px 280px 0 0;
   bottom:40px;
 }
 

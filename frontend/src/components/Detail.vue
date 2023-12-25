@@ -148,12 +148,12 @@ export default{
       window.location.href = url;
     },
     search(val){
-      self.location.href = 'http://localhost:8080/result/'+val;
+      self.location.href = 'http://120.55.14.3:8088/result/'+val;
     },
     async SearchInfo(){
       const para = new URLSearchParams();
       para.append("id",this.id);
-      await axios.post("http://localhost:8088/getInfo",para)
+      await axios.post("http://120.55.14.3:8088/getInfo",para)
       .then(response =>{
         this.result={
           id:response.data.id,

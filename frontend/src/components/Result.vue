@@ -207,7 +207,7 @@ export default {
     console.log("current page:"+val);
   },
   async updateHot(){
-    await axios.post("http://localhost:8088/hot")
+    await axios.post("http://120.55.14.3:8088/hot")
     .then(response => {
         this.Hot = response.data;
       }
@@ -218,7 +218,7 @@ export default {
   async updateRecommend(){
     const para = new URLSearchParams();
     para.append("username","test");  
-    await axios.post("http://localhost:8088/recommend",para)
+    await axios.post("http://120.55.14.3:8088/recommend",para)
     .then(response => {
       console.log(response.data);
         this.Recommend = response.data;
@@ -239,7 +239,7 @@ export default {
   params.append('type',this.Type);
   params.append('currentPage',this.currentPage);
   params.append('username',"spl");
-    await axios.post('http://localhost:8088/search',params)
+    await axios.post('http://120.55.14.3:8088/search',params)
     .then(response=>{
        this.searchResults=[];
        let i = (this.currentPage-1)*8+1;

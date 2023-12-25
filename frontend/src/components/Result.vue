@@ -158,6 +158,7 @@ import axios from 'axios';
 export default {
   data () {
     return {
+      urlprefix:"http://10.162.166.132:8080/",
       currentPage:1,
       total:1,
       radio:"常规搜索",
@@ -286,14 +287,14 @@ export default {
     this.Search();
   },
   handleClick(val){
-    self.location.href = 'http://localhost:8080/result/'+val;
+    self.location.href = this.urlprefix + 'result/'+val;
   },
   jumpToInfo(val){
     console.log(val);
-    self.location.href = 'http://localhost:8080/detail/'+val;
+    self.location.href = this.urlprefix + 'detail/'+val;
   },
   jumpHelp(){
-    self.location.href = 'http://localhost:8080/help'
+    self.location.href = this.urlprefix + 'help'
   },
   updateType(){
     switch(this.radio){

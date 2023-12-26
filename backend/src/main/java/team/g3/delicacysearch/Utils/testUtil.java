@@ -131,7 +131,7 @@ public class testUtil {
                                     System.out.println(indexResponse.toString());
 
                                     String documents1 = "{ \"name\": \""+ text_title +"\" }"; // 替换为您要插入的数据
-                                    IndexRequest request3 = new IndexRequest("pigg_test_pinyin");
+                                    IndexRequest request3 = new IndexRequest("pinyin_index");
                                     request3.id(Integer.toString(num++)); // 设置文档ID
                                     request3.source(documents1, XContentType.JSON);
                                     IndexResponse indexResponse4 = restHighLevelClient.index(request3, RequestOptions.DEFAULT);

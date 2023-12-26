@@ -66,14 +66,16 @@ export default {
             // this.$refs.mainScroll.scrollTo({top:this.$refs.scrollHeight, behavior:'smooth'})
             this.content = ""
             let payload = {
-                "messages": this.messages
+                "messages": [...this.messages]
             }
             // const params = new URLSearchParams();
             // params.append('messages', this.messages);
             // console.log(params)
             this.ready = false
+            this.messages.push({"role":"assistant","content":"正在思考中..."})
             await axios.post(url, payload, config)
                 .then(response => {
+                    this.messages.pop()
                     console.log(response)
                     this.messages.push({ "role": "assistant", "content": response.data.result })
                     // document.getElementById('chat').scrollIntoView(0,document.getElementById('chat').scrollHeight)

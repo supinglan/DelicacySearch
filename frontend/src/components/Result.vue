@@ -158,6 +158,7 @@ import axios from 'axios';
 export default {
   data () {
     return {
+      urlprefix:"http://10.162.166.132:8080/",
       currentPage:1,
       total:1,
       radio:"常规搜索",
@@ -222,7 +223,7 @@ export default {
     console.log("bottom:"+this.bottomTop);
   },
   async updateHot(){
-    await axios.post("http://localhost:8088/hot")
+    await axios.post("http://120.55.14.3:8088/hot")
     .then(response => {
         this.Hot = response.data;
       }
@@ -233,7 +234,7 @@ export default {
   async updateRecommend(){
     const para = new URLSearchParams();
     para.append("username","test");  
-    await axios.post("http://localhost:8088/recommend",para)
+    await axios.post("http://120.55.14.3:8088/recommend",para)
     .then(response => {
       console.log(response.data);
         this.Recommend = response.data;
@@ -254,7 +255,7 @@ export default {
   params.append('type',this.Type);
   params.append('currentPage',this.currentPage);
   params.append('username',"spl");
-    await axios.post('http://localhost:8088/search',params)
+    await axios.post('http://120.55.14.3:8088/search',params)
     .then(response=>{
        this.searchResults=[];
        let i = (this.currentPage-1)*8+1;
@@ -286,14 +287,14 @@ export default {
     this.Search();
   },
   handleClick(val){
-    self.location.href = 'http://localhost:8080/result/'+val;
+    self.location.href = this.urlprefix + 'result/'+val;
   },
   jumpToInfo(val){
     console.log(val);
-    self.location.href = 'http://localhost:8080/detail/'+val;
+    self.location.href = this.urlprefix + 'detail/'+val;
   },
   jumpHelp(){
-    self.location.href = 'http://localhost:8080/help'
+    self.location.href = this.urlprefix + 'help'
   },
   updateType(){
     switch(this.radio){

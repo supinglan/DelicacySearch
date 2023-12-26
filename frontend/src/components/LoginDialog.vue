@@ -127,7 +127,7 @@ import axios from 'axios';
        para.append("username",this.loginForm.username);
        para.append("password",this.loginForm.password);
        
-        await axios.post('http://localhost:8088/user/login',para)
+        await axios.post('http://120.55.14.3:8088/user/login',para)
       .then(response=>{
         console.log(response)
         if(response.data.message=="密码错误"){
@@ -167,7 +167,7 @@ import axios from 'axios';
        para.append("password",this.registerForm.password);
        para.append("email",this.registerForm.email);
         
-        await axios.post('http://localhost:8088/user/register',para)
+        await axios.post('http://120.55.14.3:8088/user/register',para)
       .then(response=>{
         if(response.data.message == "注册成功"){
           this.$message({

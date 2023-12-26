@@ -1,6 +1,6 @@
 <template>
   <div style="overflow: scroll;height: 100vh;">
-  <el-container style="height: 2500px;border: 1px solid #eee ;">
+  <el-container style="height: 2000px;border: 1px solid #eee ;">
     <el-container >
       <el-header style="text-align: left; font-size: 12px;display: flex;">
         <img src="../views/logo_full.png" style="width: 10%; margin-top: 10px; height:70%;">
@@ -12,16 +12,14 @@
           <el-col :offset="4">
         <el-breadcrumb separator-class="el-icon-arrow-right">
     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>
-      <el-link @click="goPrev" style="margin-bottom: 1px;" :underline="false">搜索结果</el-link>
-    </el-breadcrumb-item>
+    <el-breadcrumb-item >搜索结果</el-breadcrumb-item>
     <el-breadcrumb-item>{{result.title}}</el-breadcrumb-item>
   </el-breadcrumb>
   </el-col>
   </el-row>
         <el-row>
-          <el-col :offset="4">
-          <div style="font-size: 32px; font-weight:1000;text-align: left;">{{ result.title }}</div>
+          <el-col :span="6" :offset="2">
+          <div style="font-size: 32px; font-weight:1000;">{{ result.title }}</div>
           </el-col>
         </el-row>
         <el-row>
@@ -158,9 +156,6 @@
       jump(url){
         window.location.href = url;
       },
-      goPrev(){
-        this.$router.go(-1);
-      },
       search(val){
         self.location.href = 'http://localhost:8080/result/'+val;
       },
@@ -185,7 +180,6 @@
           if(this.result.step == null){
             this.display = "none";
           }
-          this.borderHeight = ((this.result.ingredient.length/12)+1)*80;
         })
         .catch(error =>{
           console.error(error);  
@@ -193,6 +187,7 @@
       }
     },
     created(){
+        this.borderHeight = ((this.result.ingredient.length/12)+1)*80;
         this.SearchInfo();
       },
   }

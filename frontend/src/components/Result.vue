@@ -110,16 +110,16 @@
        
       <div class="set" >
         <div style="margin-left: 7%;">
-          <li style="width:150px;"><span style="color:crimson;">1</span><a href="javascript:;" v-on:click="handleClick(Hot[0])">{{Hot[0]}}</a></li> 
-          <li style="width:150px;"><span style="color:chocolate">2</span><a href="javascript:;" v-on:click="handleClick(Hot[1])">{{Hot[1]}}</a></li> 
-          <li style="width:150px;"><span style="color:gold">3</span><a href="javascript:;" v-on:click="handleClick(Hot[2])">{{Hot[2]}}</a></li> 
-          <li style="width:150px;"><span>4</span><a href="javascript:;" v-on:click="handleClick(Hot[3])">{{Hot[3]}}</a></li> 
+          <li style="width:150px;"><span style="color:crimson;">1</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[0])">{{Hot[0]}}</a></li> 
+          <li style="width:150px;"><span style="color:chocolate">2</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[1])">{{Hot[1]}}</a></li> 
+          <li style="width:150px;"><span style="color:gold">3</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[2])">{{Hot[2]}}</a></li> 
+          <li style="width:150px;"><span>4</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[3])">{{Hot[3]}}</a></li> 
         </div>
         <div style="margin-left: 16%;">
-          <li style="width:150px;"><span>5</span><a href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
-          <li style="width:150px;"><span>6</span><a href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
-          <li style="width:150px;"><span>7</span><a href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
-          <li style="width:150px;"><span>8</span><a href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
+          <li style="width:150px;"><span>5</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[4])">{{Hot[4]}}</a></li> 
+          <li style="width:150px;"><span>6</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[5])">{{Hot[5]}}</a></li> 
+          <li style="width:150px;"><span>7</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[6])">{{Hot[6]}}</a></li> 
+          <li style="width:150px;"><span>8</span><a class = "hot" href="javascript:;" v-on:click="handleClick(Hot[7])">{{Hot[7]}}</a></li>
         </div>
       </div>
       <AIQA style="height:600px;width:530px;margin-top:300px;margin-left: -30px;"></AIQA>
@@ -147,6 +147,7 @@
       </ul>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -287,14 +288,21 @@ export default {
     this.Search();
   },
   handleClick(val){
-    self.location.href = this.urlprefix + 'result/'+val;
+    // self.location.href = this.urlprefix + 'result/'+val;
+    this.$router.push({
+      path:`/result/${val}`
+    }).catch();
   },
   jumpToInfo(val){
     console.log(val);
-    self.location.href = this.urlprefix + 'detail/'+val;
+    this.$router.push({
+      path:`/detail/${val}`
+    }).catch();
   },
   jumpHelp(){
-    self.location.href = this.urlprefix + 'help'
+    this.$router.push({
+      path:`/help`
+    }).catch();
   },
   updateType(){
     switch(this.radio){
@@ -448,8 +456,7 @@ created(){
   this.Search();
   console.log(this.Hot);
   
-},
-
+}
 }
 </script>
 
@@ -718,6 +725,15 @@ a:hover {
   width:500px;
   margin-bottom: 20px;
 }
+.main-wrapper .search-ranking .hot{
+  display: block; 
+  white-space: nowrap; 
+  text-overflow: ellipsis;  
+  overflow: hidden; 
+  flex-direction: column;
+  text-align: left;
+  width:150px;
+}
 
 
 .main-wrapper .search-ranking li {
@@ -754,13 +770,17 @@ a:hover {
   font-size: 15px;
 }
 .main-wrapper .search-ranking .item{
-  display: flex;
+  display: block; 
+  white-space: nowrap; 
+  text-overflow: ellipsis;  
+  overflow: hidden; 
   flex-direction: column;
-  height:110px;
+  height:30px;
   width:150px;
   margin-top: 8px;
   margin-bottom: 8px;
   margin-right: 10px;
+  margin-left: 20px;
 }
 
 .main-wrapper .search-ranking .el-image{

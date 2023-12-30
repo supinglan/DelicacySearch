@@ -121,11 +121,11 @@ public class ESqueryService {
 
             switch (sortType) {
                 case 0:
-                    return total_results;
-                case 1:
-                    return searchByClick(total_results);
-                case 2:
                     return searchByAll(total_results);
+                case 1:
+                    return total_results;
+                case 2:
+                    return searchByClick(total_results);
                 default:
                     return null;
             }
@@ -133,11 +133,11 @@ public class ESqueryService {
         BoolQueryBuilder boolQuery = boolQureyBuild(type, searchOps, SearchText);
         switch (sortType) {
             case 0:
-                return gainResults(boolQuery);
-            case 1:
-                return searchByClick(gainResults(boolQuery));
-            case 2:
                 return searchByAll(gainResults(boolQuery));
+            case 1:
+                return gainResults(boolQuery);
+            case 2:
+                return searchByClick(gainResults(boolQuery));
             default:
                 return null;
         }
@@ -152,7 +152,7 @@ public class ESqueryService {
 
 
 
-    //综合排序（相关度60% + 点击量40%）
+    //综合排序（相关度80% + 点击量20%）
     public ArrayList<Script> searchByAll(ArrayList<Script> results) throws IOException {
         // 按照 score 字段排序
         results.sort(Comparator.comparingDouble(Script::getScore).reversed());
@@ -162,9 +162,9 @@ public class ESqueryService {
         // 存储综合排名值
         Map<Script, Double> combinedRanks = new HashMap<>();
         for (int i = 0; i < results.size(); i++) {
-            double combinedRank = 0.6 * (i + 1); // 0-based index, so add 1 to avoid zero
+            double combinedRank = 0.8 * (i + 1); // 0-based index, so add 1 to avoid zero
             int clickRank = resultsByClicks.indexOf(results.get(i)) + 1; // 0-based index, so add 1 to avoid zero
-            combinedRank += 0.4 * clickRank;
+            combinedRank += 0.2 * clickRank;
             combinedRanks.put(results.get(i), combinedRank); // 存储综合排名值
         }
 
@@ -464,11 +464,11 @@ public class ESqueryService {
             searchResults.addAll(gainResults(boolQueryBuilder2));
             switch (sortType) {
                 case 0:
-                    return searchByScore(searchResults);
-                case 1:
-                    return searchByClick(searchResults);
-                case 2:
                     return searchByAll(searchResults);
+                case 1:
+                    return searchByScore(searchResults);
+                case 2:
+                    return searchByClick(searchResults);
                 default:
                     return null;
             }
@@ -478,11 +478,11 @@ public class ESqueryService {
             searchResults.addAll(gainResults(boolQueryBuilder1));
             switch (sortType) {
                 case 0:
-                    return searchByScore(searchResults);
-                case 1:
-                    return searchByClick(searchResults);
-                case 2:
                     return searchByAll(searchResults);
+                case 1:
+                    return searchByScore(searchResults);
+                case 2:
+                    return searchByClick(searchResults);
                 default:
                     return null;
             }
@@ -627,11 +627,11 @@ public class ESqueryService {
                 boolQuery.must(QueryBuilders.termsQuery("tag.keyword", tag));
             switch (sortType) {
                 case 0:
-                    return searchByScore(gainResults(boolQuery));
-                case 1:
-                    return searchByClick(gainResults(boolQuery));
-                case 2:
                     return searchByAll(gainResults(boolQuery));
+                case 1:
+                    return searchByScore(gainResults(boolQuery));
+                case 2:
+                    return searchByClick(gainResults(boolQuery));
                 default:
                     return null;
             }
@@ -783,11 +783,11 @@ public class ESqueryService {
                 boolQuery.must(QueryBuilders.termsQuery("tag.keyword", tag));
             switch (sortType) {
                 case 0:
-                    return searchByScore(gainResults(boolQuery));
-                case 1:
-                    return searchByClick(gainResults(boolQuery));
-                case 2:
                     return searchByAll(gainResults(boolQuery));
+                case 1:
+                    return searchByScore(gainResults(boolQuery));
+                case 2:
+                    return searchByClick(gainResults(boolQuery));
                 default:
                     return null;
             }

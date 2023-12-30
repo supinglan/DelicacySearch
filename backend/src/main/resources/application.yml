@@ -8,4 +8,4 @@ spring:
         password: zju20230
         driver-class-name: com.mysql.cj.jdbc.Driver
 buildIndex:
-    enabled: true
+    enabled: false

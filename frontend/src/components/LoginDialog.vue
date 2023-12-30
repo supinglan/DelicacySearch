@@ -161,36 +161,42 @@ import axios from 'axios';
         //     type: 'success',
         //     message: '注册成功!'
         //   });
+        this.$refs.registerForm.validate(async (valid) => {
+          if (valid) {
+            const para = new URLSearchParams;
+            para.append("username", this.registerForm.username);
+            para.append("password", this.registerForm.password);
+            para.append("email", this.registerForm.email);
 
-       const para = new URLSearchParams;
-       para.append("username",this.registerForm.username);
-       para.append("password",this.registerForm.password);
-       para.append("email",this.registerForm.email);
-        
-        await axios.post('http://120.55.14.3:8088/user/register',para)
-      .then(response=>{
-        if(response.data.message == "注册成功"){
-          this.$message({
-            type: 'success',
-            message: '注册成功!'
-          });
-          this.registerFormVisible = false;
-        }else if(response.data.message == "电子邮箱已被注册"){
-          this.$message({
-            type: 'error',
-            message: '电子邮箱已被注册，注册失败!'
-          });
-        }else if(response.data.message == "用户名已被注册"){
-          this.$message({
-            type: 'error',
-            message: '用户名已被注册，注册失败!'
-          });
-        }else{
-          this.$message({
-               type: 'error',
-               message: '出错啦'
-          });
-        }
+            await axios.post('http://120.55.14.3:8088/user/register', para)
+              .then(response => {
+                if (response.data.message == "注册成功") {
+                  this.$message({
+                    type: 'success',
+                    message: '注册成功!'
+                  });
+                  this.registerFormVisible = false;
+                } else if (response.data.message == "电子邮箱已被注册") {
+                  this.$message({
+                    type: 'error',
+                    message: '电子邮箱已被注册，注册失败!'
+                  });
+                } else if (response.data.message == "用户名已被注册") {
+                  this.$message({
+                    type: 'error',
+                    message: '用户名已被注册，注册失败!'
+                  });
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: '出错啦'
+                  });
+                }
+              })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
         
       })
       },

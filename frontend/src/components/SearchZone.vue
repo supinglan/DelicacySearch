@@ -45,7 +45,7 @@ export default {
         const params = new URLSearchParams();  
     params.append('SearchText',this.toSearch);
       
-         await axios.post("http://localhost:8088/autofill",params)
+         await axios.post("http://120.55.14.3:8088/autofill",params)
         .then(response=>{  
           this.autoComp = []
 

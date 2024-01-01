@@ -369,7 +369,6 @@ export default {
         case "火锅":
           this.Method = 8;
           break;
-
       }
     }else if(key === 1){
       switch(tag){
@@ -449,6 +448,11 @@ export default {
           break;
       }
     }
+    console.log("Method:"+this.Method);
+    console.log("Category:"+this.Category);
+    console.log("Taste:"+this.Taste);
+    console.log("Scene:"+this.Scene);
+    
   }
 },
 created(){
@@ -457,6 +461,20 @@ created(){
   this.Search();
   console.log(this.Hot);
   
+},
+watch:{
+  Method(newValue,oldValue){
+    this.Search()
+  },
+  Category(newValue,oldValue){
+    this.Search()
+  },
+  Taste(newValue,oldValue){
+    this.Search()
+  },
+  Scene(newValue,oldValue){
+    this.Search()
+  }
 }
 }
 </script>

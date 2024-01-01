@@ -4,12 +4,17 @@ import Serach from '../components/Search.vue'
 import Result from '../components/Result.vue'
 import Detail from '../components/Detail.vue'
 import Help from '@/components/Help.vue'
+import SerachZone from '../components/SearchZone.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     name: 'home',
     component: Serach
   },

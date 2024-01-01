@@ -13,9 +13,9 @@
       :highlight-first-item="true"
       :size="medium"
       :popper-append-to-body="true"
-      @keyup.enter.native="onNext"
+      @keyup.enter.native="onZoneNext"
     >
-</el-autocomplete>
+  </el-autocomplete>
 </div>
 
 </template>
@@ -41,13 +41,18 @@ export default {
     },
     methods: {
       async querySearch(queryString, cb) {
-     
         const params = new URLSearchParams();  
-    params.append('SearchText',this.toSearch);
+        params.append('SearchText',this.toSearch);
+        this.autoComp = []
+        this.autoComp.unshift({ "value": this.toSearch }) // 把当前项加到列表
+        if (this.toSearch.includes(' ')) {
+          cb(this.autoComp)
+          return
+        }
+        
       
          await axios.post("http://120.55.14.3:8088/autofill",params)
         .then(response=>{  
-          this.autoComp = []
 
           response.data.forEach(element => {
             this.autoComp.push({"value":element})
@@ -63,7 +68,6 @@ export default {
         var results = this.autoComp;
             // 调用 callback 返回建议列表的数据
 
-          results.unshift({ "value": this.toSearch }) // 把当前项加到列表
         cb(results);
       },
       createFilter(queryString) {
@@ -78,9 +82,11 @@ export default {
       handleSelect(item) {
         console.log(item);
         },
-      onNext() {
+      onZoneNext() {
+        // alert(1)
+        // alert("prev:"+this.prevRoute+",to:"+this.toSearch)
         if(this.toSearch===''){
-          router.go(-1)
+          this.$router.push('/home')
           return;
         }
         if(this.toSearch===this.prevRoute){
@@ -90,22 +96,37 @@ export default {
         if(this.toSearch!==this.prevRoute){
           
           this.prevRoute = this.toSearch
-          if (this.$route.fullPath.includes("detail/")) {
-            router.go(-1).catch();
-            router.push({ path: 'result/' + this.toSearch }).catch();
-          }
-          else if(!this.$route.fullPath.includes("result/"))
-          router.push({ path: 'result/' + this.toSearch }).catch();
-          else
-          router.replace({ path: this.toSearch }).catch();
+          // if (this.$route.fullPath.includes("detail/") || this.$route.fullPath.includes("result/"))
+          //   window.location.href = "../result/" + this.toSearch
+          // else
+          // window.location.href = "result/" + this.toSearch
+          // if (this.$route.fullPath.includes("detail/")) {
+
+          //   router.go(-1).catch();
+          //   router.push({ path: 'result/' + this.toSearch }).catch();
+          // }
+          this.toSearch =  this.toSearch.split(' ').join('+')
+          this.$router.push({ path: '/result/' + this.toSearch }).catch();
+        //   if(!this.$route.fullPath.includes("result"))
+        //   router.replace({ path: 'result/' + this.toSearch }).catch();
+        //   else if (this.$route.fullPath.includes("detail"))
+        //     window.location.href = "../result/" + this.toSearch
+        // else
+        //   router.replace({ path: this.toSearch }).catch();
 
           toDo();
 
         }
       }
     },
-    mounted() {
+  mounted() {
+    
       this.autoComp = this.loadAll();
+  },
+  watch: {
+    toSearch(newValue, oldValue) {
+        
+      }
     }
 }
 </script>

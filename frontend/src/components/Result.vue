@@ -7,8 +7,9 @@
         <!-- logo -->
         <img src="../views/logo.png" alt="profile" style="width:40px;height: 40px; margin-top: 16px; margin-left: 6%;"/>
         <!-- 左侧搜索条 -->
-          <SearchZone @keyup.enter.native="onNext" :prevRoute="this.$route.params.para" :toSearch="this.$route.params.para" style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
+          <SearchZone :toDo="Search" :prevRoute="this.$route.params.para.split('+').join(' ')" :toSearch="this.$route.params.para.split('+').join(' ')" style="width: 40%; margin-left:10%; margin-top:-45px;border: 1px solid #c4c7ce; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"/>
           <!-- 右侧设置及用户条 -->
+          <!-- @keyup.enter.native="onNext"  -->
         <ul class="info">
           <li>
             <el-select v-model="value" placeholder="自定义排序" @change = "updateSort">
@@ -166,7 +167,7 @@ export default {
       Hot:[],
       Recommend:[],
       activeNames: [],
-      Username:"Guest",
+      Username:"测试",
       Method:0,
       Taste:0,
       Scene:0,
@@ -234,7 +235,7 @@ export default {
   },
   async updateRecommend(){
     const para = new URLSearchParams();
-    para.append("username","test");  
+    para.append("username","测试");  
     await axios.post("http://120.55.14.3:8088/recommend",para)
     .then(response => {
       console.log(response.data);
@@ -255,7 +256,7 @@ export default {
   params.append('sortType',this.Sort);
   params.append('type',this.Type);
   params.append('currentPage',this.currentPage);
-  params.append('username',"spl");
+  params.append('username',"测试");
     await axios.post('http://120.55.14.3:8088/search',params)
     .then(response=>{
        this.searchResults=[];

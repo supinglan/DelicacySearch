@@ -79,9 +79,9 @@ export default {
             }
         };
     },
-    mounted() {
-        this.showSeeksGraph();
+    async mounted() {
         this.currentNodeText = this.root
+        this.showSeeksGraph();
     },
     beforeDestroy() {
         console.log('beforeDestroy stop layout');
@@ -89,6 +89,7 @@ export default {
     },
     methods: {
         async showSeeksGraph() {
+            if(this.root=='') return
             const params = new URLSearchParams();
             params.append('rootText', this.root);
             await axios.post('http://120.55.14.3:8088/getKG', params)

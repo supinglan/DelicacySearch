@@ -9,7 +9,13 @@ import router from './router';
     <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
-
+<script>
+export default {
+  beforeCreate() {
+    document.title = '食香传世'
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
